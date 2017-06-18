@@ -143,7 +143,7 @@ user@user-VirtualBox:/opt/openfoam4/tutorials/mesh$ tree -L 2
 
 blockMesh は，もっとも基本的なメッシュ生成ユーティリティである。
 
-設定ファイルを細かく記述すれば，思い通りにコントロールしてメッシュを生成することも可能である。しかし，かなり煩雑は作業となる。
+設定ファイルを細かく記述すれば，思い通りにコントロールしてメッシュを生成することも可能である。しかし，かなり煩雑は作業となるため，事前に入念な準備・設計が必要である。
 
 次の章で使用するsnappyHexMeshユーティリティでも，まずはじめにblockMeshを実行する必要がある。
 
@@ -153,6 +153,7 @@ blockMesh は，もっとも基本的なメッシュ生成ユーティリティ�
 
 $FOAM_TUTORIALS/incompressible/icoFoam/cavity/に含まれるファイルの情報は次の通りである。（treeコマンドの実行）
 > cd $FOAM_TUTORIALS/incompressible/icoFoam/cavity/
+>
 > tree
 
 ```
@@ -211,6 +212,7 @@ GUIで操作する場合には，ファイルマネージャーを起動し，$F
 コマンドラインで操作する場合には，下記を実行する。
 
 > cd $FOAM_RUN
+>
 > cp -r $FOAM_TUTORIALS/incompressible/icoFoam/cavity/ .
 
 ### cavity/cavity 例題のblockMeshDict の確認
@@ -289,6 +291,69 @@ blockMeshDictディクショナリの基本構造は次の通りである。
 - blocks　ブロック
 - edges　辺（円弧やスプラインの種類と通過点を指定する）
 - patches　面に関する情報（境界条件）
+
+blockMeshDictディクショナリの作成時には，次のことに気をつけると良い。
+
+- 設計図をしっかりと描く！
+
+- ブロック作成時に，点の順番を意識する！
+    1. x座標（ローカル座標１）が増える，
+    2. y座標（ローカル座標２）が増える，
+    3. z座標（ローカル座標３）が増える。
+
+- Dict を見やすく書く。
+    - 正確なインデント，
+    - 適切なコメント，など。
+
+- 括弧 () の前には，空白を入れる．
+
+blockMeshDictの書き方に，いくつかの方法が挙げられる。
+-  数字を直接書き込む （変数も使用可）
+    - 基本
+    - 形状変更時に手間がかかる
+-  マクロ言語プロセッサ m4 を利用して，汎用化
+    - blockMeshDict を生成するためのファイルを作成
+    - 形状変更等が容易になる
+-  Dictionary に コード（プログラム）を書いて，汎用化
+-  プログラム・スクリプトを作成して生成する
+
+##### blockMeshDict: vertices (節点)
+
+３次元座標で点の位置を指定する。始めに指定した点が０番となり，順に増える番号が内部で付与される。後の設定では，この節点番号で点を指示する。
+
+| <img src="./2014SlideImages/20140510メッシュ生成入門_実習v2/スライド12.png" alt="" title="blockMeshDict: vertices" width="400px"> |
+| :--------------------------------------: |
+|        図 　blockMeshDict: vertices        |
+
+##### blockMeshDict: blocks(ブロック)
+
+六面体としてブロックを定義する。hexのあとに，６面体の頂点となる節点の番号を列記する。前述の通り，点の指定順によって，ブロック内でのローカルな座標系が決定される。
+
+各方向（ローカル座標）のセル数と拡大率を指定する。拡大率は，座標が最大であるセルの大きさ／座標が最小であるセルの大きさとして定義される。
+
+| <img src="./2014SlideImages/20140510メッシュ生成入門_実習v2/スライド13.png" alt="" title="blockMeshDict: blocks" width="400px"> |
+| :--------------------------------------: |
+| <img src="./2014SlideImages/20140510メッシュ生成入門_実習v2/スライド14.png" alt="" title="blockMeshDict: blocks" width="400px"> |
+|         図 　blockMeshDict: blocks         |
+
+##### blockMeshDict: edges (線)
+
+2つの節点間を結ぶ線の種類を指定できる。指定をしなければ、直線で結ばれる。下記の種類が選択可能である。
+
+| 指定するキーワード | 説明      | 追加で指定する情報 |
+| --------- | ------- | --------- |
+| arc       | 円弧      | 途中の1点     |
+| spline    | スプライン曲線 | 途中の点のリスト  |
+| polyLine  | 多角線     | 途中の点のリスト  |
+
+##### blockMeshDict: boundary (境界面)
+
+境界面には，任意の名前を付ける。ただし，他のファイルの情報（boudary, U, p など）と一致させる必要がある。条件指定時に正規表現が使えるため，同じ条件を付与する面には部分一致する名前を付けるなどの工夫をすると良い。
+
+typeキーワードに続けて，境界条件に応じた型を与える。
+
+面は，4つの節点で指定する。１つの名前に，複数の面をまとめて指定できる。
+
 
 #### blockMesh の実行
 
@@ -684,6 +749,7 @@ GUIで操作する場合には，ファイルマネージャーを起動し，$F
 コマンドラインで操作する場合には，下記を実行する。
 
 > cd $FOAM_RUN
+>
 > cp -r $FOAM_TUTORIALS/mesh/snappyHexMesh/flange .
 
 ### flange例題の実行と確認
@@ -694,19 +760,20 @@ GUIで操作する場合には，ファイルマネージャーを起動し，$F
 > of4
 
 Allrunスクリプトを実行する。
-> Allrun
+> ./Allrun
 
 メッシュを見る。
 
 ### flange例題のステップ実行と確認
 
 先ほどの端末で，実行結果を削除するため，Allcleanを実行する。
-> Allclean
+> ./Allclean
 
 ここから，手作業で一つ一つのコマンドを実行して，何が行なわれたかを確認していく。
 
 まず，形状ファイルのコピーと展開をするため，下記コマンドを実行する。
 > cp $FOAM_TUTORIALS/resources/geometry/flange.stl.gz constant/triSurface/
+>
 > uncompress constant/triSurface/flange.stl.gz 
 
 blockMeshを実行する。
