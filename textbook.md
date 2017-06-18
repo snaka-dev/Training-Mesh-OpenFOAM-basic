@@ -321,7 +321,7 @@ blockMeshDictの書き方に，いくつかの方法が挙げられる。
 
 ３次元座標で点の位置を指定する。始めに指定した点が０番となり，順に増える番号が内部で付与される。後の設定では，この節点番号で点を指示する。
 
-| <img src="./2014SlideImages/20140510メッシュ生成入門_実習v2/スライド12.png" alt="" title="blockMeshDict: vertices" width="400px"> |
+| <img src="./images/slide12.png" alt="" title="blockMeshDict: vertices" width="400px"> |
 | :--------------------------------------: |
 |        図 　blockMeshDict: vertices        |
 
@@ -331,9 +331,9 @@ blockMeshDictの書き方に，いくつかの方法が挙げられる。
 
 各方向（ローカル座標）のセル数と拡大率を指定する。拡大率は，座標が最大であるセルの大きさ／座標が最小であるセルの大きさとして定義される。
 
-| <img src="./2014SlideImages/20140510メッシュ生成入門_実習v2/スライド13.png" alt="" title="blockMeshDict: blocks" width="400px"> |
+| <img src="./images/slide13.png" alt="" title="blockMeshDict: blocks" width="400px"> |
 | :--------------------------------------: |
-| <img src="./2014SlideImages/20140510メッシュ生成入門_実習v2/スライド14.png" alt="" title="blockMeshDict: blocks" width="400px"> |
+| <img src="./images/slide14.png" alt="" title="blockMeshDict: blocks" width="400px"> |
 |         図 　blockMeshDict: blocks         |
 
 ##### blockMeshDict: edges (線)
