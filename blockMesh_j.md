@@ -611,6 +611,7 @@ mesh/blockMesh/sphere 例題では，次のような機能が使われている
 | :--------------------------------------: |
 |     図 　vertices from sphere tutorial      |
 
+
 | <img src="images/blockMesh_sphere_zMinusView.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
 | :--------------------------------------: |
 |     図 　mesh from sphere tutorial      |
@@ -623,8 +624,8 @@ mesh/blockMesh/sphere 例題では，次のような機能が使われている
 blockMeshDict において，facesをコメントアウトして実行すると，下記のメッシュが生成される。
 
 | <img src="images/blockMesh_sphere_withoutFacesProjection_zMinusView.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
-| <img src="images/blockMesh_sphere_withoutFacesProjection_wholeView.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
 | :--------------------------------------: |
+| <img src="images/blockMesh_sphere_withoutFacesProjection_wholeView.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
 |     図 　mesh from sphere tutorial without face-projection     |
 
 上記のような単純なプロジェクションでは，メッシュの品質が低い。（直交性が悪い。）
