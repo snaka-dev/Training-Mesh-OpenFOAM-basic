@@ -151,3 +151,6 @@ patch名は，geometry欄で指定した名前と，STLファイル内のsolid�
 
 snappyHexMeshDict内で単純な形状を作成することも可能である．（$FOAM_TUTORIALS/mesh/snappyHexMesh/iglooWithFridges/例題）
 
+
+
+## [目次へ戻る](index_j.md)

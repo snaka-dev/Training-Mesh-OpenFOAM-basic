@@ -345,7 +345,9 @@ cavity/cavityClipped ディレクトリへ移動
 
 blockMeshDict の確認
 
-　　　　特徴：マルチブロック（face matching型）
+- 特徴：マルチブロック
+
+- face **matching** 型
 
 blockMesh の実行
 
@@ -446,7 +448,10 @@ cavity/cavityClipped ディレクトリへ移動
 
 blockMeshDict の変更
 
-　　　　特徴：マルチブロック（face merging型）
+- 特徴：マルチブロック
+
+- face **merging** 型
+
 
 ```
 scale 0.1;
@@ -583,3 +588,5 @@ paraFoam を実行し，メッシュを確認する．
 
 https://www.openfoam.com/documentation/user-guide/blockMesh.php#x13-410004.3
 
+
+## [目次へ戻る](index_j.md)
