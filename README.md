@@ -5,4 +5,4 @@ training course of Meshing with OpenFOAM for beginner for OpenCAE study group @ 
 
 
 
-Updated for OpenFOAM 4
+Updated for OpenFOAM v1812
