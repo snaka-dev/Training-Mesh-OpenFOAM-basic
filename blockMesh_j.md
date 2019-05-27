@@ -1,3 +1,8 @@
+# OpenFOAMによるOpenFOAMのためのメッシュ生成（はじめの一歩）
+## June 15, 2019; OpenCAE勉強会＠富山
+### 中川慎二（富山県立大学）[Shinji NAKAGAWA，Toyama Prefectural University]  
+
+
 ## blockMesh - icoFoam/cavity例題集を使って
 
 blockMesh は，もっとも基本的なメッシュ生成ユーティリティである。設定ファイルを細かく記述すれば，思い通りにコントロールしてメッシュを生成することも可能である。しかし，かなり煩雑は作業となるため，事前に入念な準備・設計が必要である。
@@ -64,7 +69,7 @@ user@user-VirtualBox:~/OpenFOAM/OpenFOAM-v1812/tutorials/incompressible/icoFoam/
 
 ### cavity例題集の作業ディレクトリへのコピー
 
-ユーザーの作業ディレクトリ（＄FOAM_RUN）に，cavity例題集をコピーする。
+ユーザーの作業ディレクトリ（$FOAM_RUN）に，cavity例題集をコピーする。
 
 GUIで操作する場合には，ファイルマネージャーを起動し，$FOAM_TUTORIALS/incompressible/icoFoam/cavity ディレクトリをコピーし，$FOAM_RUNへペーストする。
 
@@ -156,7 +161,7 @@ blockMeshDictディクショナリの作成時には，次のことに気をつ�
 
 - 設計図をしっかりと描く！
 
-- ブロック作成時に，点の順番を意識する！
+- ブロック作成時に，点の順番を意識する！この順番によって，ローカル座標系が決定される。
     1. x座標（ローカル座標１）が増える，
     2. y座標（ローカル座標２）が増える，
     3. z座標（ローカル座標３）が増える。
@@ -258,7 +263,7 @@ xMax 0;
 $xMax
 ```
 
-この記述方法を使って，もとのblockMeshDictを次のように書き換える。
+【やってみよう！】　この記述方法を使って，もとのblockMeshDictを次のように書き換える。
 
 ```blockMeshDict改造例
 scale 0.1;
@@ -294,7 +299,7 @@ blocks
 
 ##### z方向のサイズを他と同じ大きさ，分割数に変更してメッシュを生成する。
 
-変数を使用すると，メッシュの変更が容易になる。例えば，z方向の大きさを変更して，計算領域を立方体とするには，次のように，zMaxとNzを書き換える。
+【やってみよう！】　変数を使用すると，メッシュの変更が容易になる。例えば，z方向の大きさを変更して，計算領域を立方体とするには，次のように，zMaxとNzを書き換える。
 
 ```blockMeshDict改造例
 scale 0.1;
@@ -341,22 +346,17 @@ zMin 0;  zMax 1;    Nz 20;  //dz=0.05
 
 ### cavity/cavityClipped 例題
 
-cavity/cavityClipped ディレクトリへ移動
+blockMesh では，単純な直方体領域でない場合，複数のブロックを組み合わせる必要がある。その例として，先ほどのcavityの一部が計算領域から外れる場合を考える。
 
-blockMeshDict の確認
+このようなケースが，cavity/cavityClipped として標準例題に用意されている。そのケースディレクトリへ移動し，blockMeshDict を確認する。先の例題との違いは，blockが3つ存在することである。
 
-- 特徴：マルチブロック
+- cavityClippedケースの blockMeshDict の特徴
 
-- face **matching** 型
+    - 特徴：マルチブロック
 
-blockMesh の実行
+    - face **matching** 型
 
-paraFoam の実行とメッシュの確認
-
-| <img src="images/cavityClipped01.png" alt="mesh from cavityClipped tutorial" title="mesh from cavityClipped tutorial" width="400px"> |
-| :--------------------------------------: |
-|   図 　mesh from cavityClipped tutorial    |
-
+cavityClippedケースのblockMeshDictを変数形式で書き直すと次のようになる。
 
 ```
 scale 0.1;
@@ -384,7 +384,6 @@ vertices
     ($xMin $yMax $zMax)
     ($xMid $yMax $zMax)
     ($xMax $yMax $zMax)
-
 );
 
 blocks
@@ -442,9 +441,18 @@ mergePatchPairs
 );
 ```
 
-### cavityClipped 例題の改造（mergePatchの使用）
+この例題に対して，blockMesh を実行し，paraFoam でメッシュを確認すると，下記のようなメッシュが生成されている。
 
-cavity/cavityClipped ディレクトリへ移動
+| <img src="images/cavityClipped01_withBlockID.png" alt="mesh from cavityClipped tutorial" title="mesh from cavityClipped tutorial" width="400px"> |
+| :--------------------------------------: |
+|   図 　mesh from cavityClipped tutorial. There are three blocks.    |
+
+この例のような face matching 型では，各ブロックで作られたメッシュが，ブロックとブロックとの界面（内部境界）で正確に一致することが必要である。さらに，各ブロックの面は，その途中で内部境界と境界とに分けることができない。例えば，B1とB2とを分割せずに1つのブロックにすると，y=0.04m の面が x<0.06m では内部面，x>0.6m で境界面となり，エラーが発生する。
+
+同じ形状に対して，少ないブロック数でメッシュを生成するためには，face merging 方式とする必要がある。次にその方法を見る。
+
+
+### cavityClipped 例題の改造（mergePatchの使用）
 
 blockMeshDict の変更
 
@@ -452,6 +460,7 @@ blockMeshDict の変更
 
 - face **merging** 型
 
+cavity/cavityClipped ディレクトリへ移動し，下記のようにblockMeshを変更する。
 
 ```
 scale 0.1;
@@ -588,5 +597,38 @@ paraFoam を実行し，メッシュを確認する．
 
 https://www.openfoam.com/documentation/user-guide/blockMesh.php#x13-410004.3
 
+
+### 比較的新しいblockMeshの機能（projection）
+
+mesh/blockMesh/sphere 例題では，次のような機能が使われている
+
+- 変数形式
+- arc エッジの使用
+- 球の作成
+- faces での球への投影
+
+| <img src="images/blockMesh_sphere_verices.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
+| :--------------------------------------: |
+|     図 　vertices from sphere tutorial      |
+
+| <img src="images/blockMesh_sphere_zMinusView.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
+| :--------------------------------------: |
+|     図 　mesh from sphere tutorial      |
+
+| <img src="images/blockMesh_sphere_zCenterSlice.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
+| :--------------------------------------: |
+|     図 　mesh (zCenter slice) from sphere tutorial      |
+
+
+blockMeshDict において，facesをコメントアウトして実行すると，下記のメッシュが生成される。
+
+| <img src="images/blockMesh_sphere_withoutFacesProjection_zMinusView.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
+| <img src="images/blockMesh_sphere_withoutFacesProjection_wholeView.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
+| :--------------------------------------: |
+|     図 　mesh from sphere tutorial without face-projection     |
+
+上記のような単純なプロジェクションでは，メッシュの品質が低い。（直交性が悪い。）
+
+標準例題には，さらに多くのブロックを使用し，品質のよいメッシュを作る例題がある。(sphere7など)
 
 ## [目次へ戻る](index_j.md)
