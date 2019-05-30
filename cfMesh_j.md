@@ -139,25 +139,49 @@ localRefinement
 
 ### 新たなメッシュ作成に挑戦
 
-flange.stl をコピーする。
+$WM_PROJECT_DIR/modules/cfmesh/tutorials/cartesianMesh/asmoOctree/をコピーし，実行ディレクトリ  $FOAM_RUN へ/flange_cfMeshとして貼付ける。
+snappyHexMesh/flange 例題のflnge.stlを，この$FOAM_RUN/flange_cfMeshへコピーする。
 
-meshDict 内のファイル名を変更する。
+> of1812
+> cp -r $WM_PROJECT_DIR/modules/cfmesh/tutorials/cartesianMesh/asmoOctree/ $FOAM_RUN/flange_cfMesh
+> cp $FOAM_TUTORIALS/resources/geometry/flange.stl.gz $FOAM_RUN/flange_cfMesh/
+> uncompress $FOAM_RUN/flange_cfMesh/flange.stl.gz
+> cd $FOAM_RUN/flange_cfMesh
 
-flange に適した maxCellSize に変更する。
+meshDIct を次のように修正
+```
+surfaceFile "flange.stl"; //"geom.stl";
+maxCellSize 0.002; 
+boundaryCellSize 0.0005; 
+```
 
 cartesianMesh を実行する。
 
 作成されたメッシュを確認する。
 
+| <img src="images/flange_cfMesh.png" alt="flange_cfMesh" title="flange_cfMesh" width="400px"> |
+| :--------------------------------------: |
+|     図 　flange_cfMesh      |
 
-### 特徴線
+
+### 特徴線を考慮した作業: surfaceFeatureEdges
 
 surfaceFeatureEdges ユーティリティを使用し，stlファイルから特徴線を抽出し，fmsファイルを作成する。
 
-stlファイルの代わりに，fmsファイルを使ってメッシュを生成する。
+> surfaceFeatureEdges flange.stl flange.fms
 
+fmsファイルを使用するように，meshDIct を修正する。
+```
+surfaceFile "flange.stl"; //"geom.stl";
+maxCellSize 0.002; 
+boundaryCellSize 0.0005; 
+```
 
+cartesianMesh でメッシュを作成する。
 
+| <img src="images/flange_cfMesh_withFMS.png" alt="flange_cfMesh_withFMS" title="flange_cfMesh_withFMS" width="400px"> |
+| :--------------------------------------: |
+|     図 　flange_cfMesh_withFMS      |
 
 
 ## [目次へ戻る](index_j.md)
