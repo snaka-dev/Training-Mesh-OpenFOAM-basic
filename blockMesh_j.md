@@ -3,17 +3,19 @@
 ### 中川慎二（富山県立大学）[Shinji NAKAGAWA，Toyama Prefectural University]  
 
 
-## blockMesh - icoFoam/cavity例題集を使って
+# blockMesh - icoFoam/cavity例題集を使って
 
-blockMesh は，もっとも基本的なメッシュ生成ユーティリティである。設定ファイルを細かく記述すれば，思い通りにコントロールしてメッシュを生成することも可能である。しかし，かなり煩雑は作業となるため，事前に入念な準備・設計が必要である。
+blockMesh は，もっとも基本的なメッシュ生成ユーティリティである。設定ファイルを細かく記述すれば，思い通りにコントロールしてメッシュを生成することも可能である。しかし，かなり煩雑な作業となるため，事前に入念な準備・設計が必要である。
 
 次の章で使用するsnappyHexMeshユーティリティでも，まずはじめにblockMeshを実行する必要がある。
 
 この章では，OpenFOAM付属の標準例題であるicoFoam/cavity例題を用いて，blockMeshの基本的な使い方を学ぶ。
 
-### icoFoam/cavity例題集
+さらに，blockMeshの応用的使用方法，新しい使用方法についても学ぶ。
 
-$FOAM_TUTORIALS/incompressible/icoFoam/cavity/に含まれるファイルの情報を確認するため，下記のコマンドを実行する．（treeコマンドの実行）
+## icoFoam/cavity例題集
+
+`FOAM_TUTORIALS/incompressible/icoFoam/cavity/` に含まれるファイルの情報を確認するため，下記のコマンドを実行する．（treeコマンドの実行）
 
 > cd $FOAM_TUTORIALS/incompressible/icoFoam/cavity/
 >
@@ -21,7 +23,7 @@ $FOAM_TUTORIALS/incompressible/icoFoam/cavity/に含まれるファイルの情�
 
 実行結果は次の通りである。
 
-```
+```sh
 user@user-VirtualBox:~/OpenFOAM/OpenFOAM-v1812/tutorials/incompressible/icoFoam/cavity$ tree
 .
 ├── Allclean
@@ -65,13 +67,13 @@ user@user-VirtualBox:~/OpenFOAM/OpenFOAM-v1812/tutorials/incompressible/icoFoam/
 12 directories, 25 files
 ```
 
-このcavityディレクトリ内には，3つ（cavity cavityGrade cavityClipped）の例題が含まれている。Allrunスクリプトを実行した場合には，cavityケースを複製（clone）した後に改造する2つ（cavityFine cavityHighRe）の例題も生成される。よって，合計5つの例題が含まれている。
+このcavityディレクトリ内には，3つ（cavity cavityGrade cavityClipped）の例題が含まれている。Allrunスクリプトを実行した場合には，cavityケースを複製（clone）した後に改造する2つ（cavityFine, cavityHighRe）の例題も生成される。よって，合計5つの例題が含まれている。
 
-### cavity例題集の作業ディレクトリへのコピー
+## cavity例題集の作業ディレクトリへのコピー
 
-ユーザーの作業ディレクトリ（$FOAM_RUN）に，cavity例題集をコピーする。
+ユーザーの作業ディレクトリ（`$FOAM_RUN`）に，cavity例題集をコピーする。
 
-GUIで操作する場合には，ファイルマネージャーを起動し，$FOAM_TUTORIALS/incompressible/icoFoam/cavity ディレクトリをコピーし，$FOAM_RUNへペーストする。
+GUIで操作する場合には，ファイルマネージャーを起動し，`$FOAM_TUTORIALS/incompressible/icoFoam/cavity` ディレクトリをコピーし，`$FOAM_RUN` へペーストする。
 
 コマンドラインで操作する場合には，下記を実行する。2つめのコマンドの最後には，スペースとピリオドがあることに注意してください．
 
@@ -79,11 +81,11 @@ GUIで操作する場合には，ファイルマネージャーを起動し，$F
 >
 > cp -r $FOAM_TUTORIALS/incompressible/icoFoam/cavity/   .
 
-### cavity/cavity 例題のblockMeshDict の確認
+## cavity/cavity 例題のblockMeshDict の確認
 
-ファイルマネージャーで，$FOAM_RUN/cavity/cavity まで移動し，blockMeshDictをダブルクリックして開く。
+ファイルマネージャーで，`$FOAM_RUN/cavity/cavity` まで移動し，`blockMeshDict` をダブルクリックして開く。
 
-```
+```c++
 scale 0.1;
 
 vertices
@@ -143,8 +145,9 @@ mergePatchPairs
 );
 ```
 
-#### blockMesh用設定ファイル blockMeshDict
-blockMeshDictディクショナリの基本構造は次の通りである。
+### blockMesh用設定ファイル blockMeshDict
+
+`blockMeshDict` ディクショナリの基本構造は次の通りである。
 
 - scale スケール変換の係数
     - 節点の座標に与えた数字に，この変換係数を掛けた値が使用される
@@ -157,7 +160,7 @@ blockMeshDictディクショナリの基本構造は次の通りである。
 - patches　面に関する情報（境界条件）
 - mergePatchPairs  ブロック間の面を結合したい場合に指示する
 
-blockMeshDictディクショナリの作成時には，次のことに気をつけると良い。
+`blockMeshDict` ディクショナリの作成時には，次のことに気をつけると良い。
 
 - 設計図をしっかりと描く！
 
@@ -172,7 +175,7 @@ blockMeshDictディクショナリの作成時には，次のことに気をつ�
 
 - 括弧 () の前には，空白を入れる．
 
-blockMeshDictの書き方に，いくつかの方法が挙げられる。
+`blockMeshDict` の書き方に，いくつかの方法が挙げられる。
 
 -  数字を直接書き込む （変数も使用可）
     - 基本
@@ -183,15 +186,15 @@ blockMeshDictの書き方に，いくつかの方法が挙げられる。
 -  Dictionary に コード（プログラム）を書いて，汎用化
 -  プログラム・スクリプトを作成して生成する
 
-##### blockMeshDict: vertices (節点)
+#### blockMeshDict: vertices (節点)
 
-３次元座標で点の位置を指定する。始めに指定した点が０番となり，順に増える番号が内部で付与される。後の設定では，この節点番号で点を指示する。
+３次元座標で点の位置を指定する。始めに指定した点が0番となり，順に増える番号が内部で付与される。後の設定では，この節点番号で点を指示する。
 
 | <img src="./images/slide12.png" alt="" title="blockMeshDict: vertices" width="400px"> |
 | :--------------------------------------: |
 |        図 　blockMeshDict: vertices        |
 
-##### blockMeshDict: blocks(ブロック)
+#### blockMeshDict: blocks(ブロック)
 
 6面体としてブロックを定義する。hexのあとに，6面体の頂点となる節点の番号を列記する。前述の通り，点の指定順によって，ブロック内でのローカルな座標系が決定される。
 
@@ -202,9 +205,13 @@ blockMeshDictの書き方に，いくつかの方法が挙げられる。
 | <img src="./images/slide14.png" alt="" title="blockMeshDict: blocks" width="400px"> |
 |         図 　blockMeshDict: blocks         |
 
-##### blockMeshDict: edges (線)
+#### blockMeshDict: edges (線)
 
 2つの節点間を結ぶ線の種類を指定できる。指定をしなければ、直線で結ばれる。下記の種類が選択可能である。
+
+
+
+　　　表　edges パラメータ 
 
 | 指定するキーワード | 説明      | 追加で指定する情報 |
 | --------- | ------- | --------- |
@@ -212,7 +219,9 @@ blockMeshDictの書き方に，いくつかの方法が挙げられる。
 | spline    | スプライン曲線 | 途中の点のリスト  |
 | polyLine  | 多角線     | 途中の点のリスト  |
 
-##### blockMeshDict: boundary (境界面)
+
+
+#### blockMeshDict: boundary (境界面)
 
 境界面には，任意の名前を付ける。ただし，他のファイルの情報（boundary, U, p など）と一致させる必要がある。条件指定時に正規表現が使えるため，同じ条件を付与する面には部分一致する名前を付けるなどの工夫をすると良い。
 
@@ -221,35 +230,35 @@ typeキーワードに続けて，境界条件に応じた型を与える。
 面は，4つの節点で指定する。１つの名前に，複数の面をまとめて指定できる。
 
 
-#### blockMesh の実行
+### blockMesh の実行
 
-cavity/cavity ディレクトリから端末を起動する。of1812を有効にして，blockMeshを実行する。
+cavity/cavity ディレクトリから端末を起動する。of1812を有効にして，`blockMesh` を実行する。
 
-ファイルマネージャーで，`$FOAM_RUN`/cavity/cavityまで移動する。ファイルマネージャー上で右クリックして，「Open Terminal Here」をクリックして端末を起動する。
+ファイルマネージャーで，`$FOAM_RUN/cavity/cavity` まで移動する。ファイルマネージャー上で右クリックして，「Open Terminal Here」をクリックして端末を起動する。
 
 端末で，下記コマンドを実行し，OpenFOAM v1812を有効にする．
 > of1812
 
-メッシュ生成ユーティリティblockMeshを実行する。
+メッシュ生成ユーティリティ `blockMesh` を実行する。
 > blockMesh
 
 端末に実行結果が表示される。エラーメッセージが表示されていないか，確認する。
 
-#### paraFoam の実行とメッシュの確認
+### paraFoam の実行とメッシュの確認
 
-可視化ソフトを起動するため，paraFoamを実行する。
+可視化ソフトを起動するため，`paraFoam` を実行する。
 
 > paraFoam
 
-ParaViewが起動したら，緑色になっているApplyボタンをクリックする。「Surface with Edges」形式で表示することで，作成されたメッシュが確認できる。
+`ParaView` が起動したら，緑色になっている `Apply` ボタンをクリックする。「Surface with Edges」形式で表示することで，作成されたメッシュが確認できる。
 
 | <img src="./images/cavity01.png" alt="mesh from cavity tutorial" title="mesh from cavity tutorial" width="300px"> |
 | :--------------------------------------: |
 |       図 　mesh from cavity tutorial       |
 
-#### blockMeshDict 内での変数利用方法の説明
+### blockMeshDict 内での変数利用方法の説明
 
-blockMeshDict では，数字を直接書く代わりに，変数を使用することができる。
+`blockMeshDict` では，数字を直接書く代わりに，変数を使用することができる。
 
 変数に値をセットする方法：設定ファイル内では，次のように，変数名と数字を並べて書き，間には空白を入れる。数字の後ろにはセミコロンを入れる。
 
@@ -257,13 +266,13 @@ blockMeshDict では，数字を直接書く代わりに，変数を使用する
 xMax 0;
 ```
 
-変数を使う時には，変数名の前に$を追加する。
+変数を使う時には，変数名の前に`$` を追加する。
 
 ```
 $xMax
 ```
 
-【やってみよう！】　この記述方法を使って，もとのblockMeshDictを次のように書き換える。
+【やってみよう！】　この記述方法を使って，もとの `blockMeshDict` を次のように書き換える。
 
 ```blockMeshDict改造例
 scale 0.1;
@@ -295,9 +304,9 @@ blocks
 以下は変更なし
 ```
 
-先ほどと同様に，blockMesh を実行し，paraFoam でメッシュを確認する。実行時にエラーメッセージが表示されていないかも確認する。
+先ほどと同様に，`blockMesh` を実行し，`paraFoam` でメッシュを確認する。実行時にエラーメッセージが表示されていないかも確認する。
 
-##### z方向のサイズを他と同じ大きさ，分割数に変更してメッシュを生成する。
+#### z方向のサイズを他と同じ大きさ，分割数に変更してメッシュを生成する。
 
 【やってみよう！】　変数を使用すると，メッシュの変更が容易になる。例えば，z方向の大きさを変更して，計算領域を立方体とするには，次のように，zMaxとNzを書き換える。
 
@@ -319,7 +328,7 @@ zMin 0;  zMax 1;    Nz 20;  //dz=0.05
 
 計算領域の大きさ，分割数などを変更して，いろいろなメッシュを生成し，確認してみる。
 
-#### Grading（引き寄せ）の設定（各自で挑戦）
+### Grading（引き寄せ）の設定（各自で挑戦）
 
 ここまでは，等間隔メッシュを作成した。シミュレーションでは，物理量の変化が激しい場所には，細かなメッシュを使用することが望ましい。そのために，生じる物理現象を予想し，物理量の変化の激しい部分に細かなメッシュを作成する。
 
@@ -344,11 +353,11 @@ zMin 0;  zMax 1;    Nz 20;  //dz=0.05
     )
 ```
 
-### cavity/cavityClipped 例題
+## cavity/cavityClipped 例題 ( face matching 方式)
 
-blockMesh では，単純な直方体領域でない場合，複数のブロックを組み合わせる必要がある。その例として，先ほどのcavityの一部が計算領域から外れる場合を考える。
+`blockMesh` では，単純な直方体領域でない場合，複数のブロックを組み合わせる必要がある。その例として，先ほどのcavityの一部が計算領域から外れる場合を考える。
 
-このようなケースが，cavity/cavityClipped として標準例題に用意されている。そのケースディレクトリへ移動し，blockMeshDict を確認する。先の例題との違いは，blockが3つ存在することである。
+このようなケースが，`cavity/cavityClipped` として標準例題に用意されている。そのケースディレクトリへ移動し，`blockMeshDict` を確認する。先の例題との違いは，blockが3つ存在することである。
 
 - cavityClippedケースの blockMeshDict の特徴
 
@@ -356,9 +365,9 @@ blockMesh では，単純な直方体領域でない場合，複数のブロッ�
 
     - face **matching** 型
 
-cavityClippedケースのblockMeshDictを変数形式で書き直すと次のようになる。
+cavityClippedケースの`blockMeshDict` を変数形式で書き直すと次のようになる。
 
-```
+```c++
 scale 0.1;
 
 xMin 0; xMid 0.6; xMax 1;  Nx1 12; Nx2 8;
@@ -388,9 +397,9 @@ vertices
 
 blocks
 (
-    hex (0 1 3 2 8 9 11 10) ($Nx1 $Ny2 $Nz) simpleGrading (1 1 1)
-    hex (2 3 6 5 10 11 14 13) ($Nx1 $Ny1 $Nz) simpleGrading (1 1 1)
-    hex (3 4 7 6 11 12 15 14) ($Nx2 $Ny1 $Nz) simpleGrading (1 1 1)
+    hex (0 1 3 2  8  9 11 10) ($Nx1 $Ny2 $Nz) simpleGrading (1 1 1)  //B0
+    hex (2 3 6 5 10 11 14 13) ($Nx1 $Ny1 $Nz) simpleGrading (1 1 1)  //B1
+    hex (3 4 7 6 11 12 15 14) ($Nx2 $Ny1 $Nz) simpleGrading (1 1 1)  //B2
 );
 
 edges
@@ -441,28 +450,28 @@ mergePatchPairs
 );
 ```
 
-この例題に対して，blockMesh を実行し，paraFoam でメッシュを確認すると，下記のようなメッシュが生成されている。
+この例題に対して，`blockMesh` を実行し，`paraFoam` でメッシュを確認すると，下記のようなメッシュが生成されている。ディクショナリのコメントとして記載した B0 から B2 までの3つのブロックから，計算領域が構成されている。
 
 | <img src="images/cavityClipped01_withBlockID.png" alt="mesh from cavityClipped tutorial" title="mesh from cavityClipped tutorial" width="400px"> |
 | :--------------------------------------: |
 |   図 　mesh from cavityClipped tutorial. There are three blocks.    |
 
-この例のような face matching 型では，各ブロックで作られたメッシュが，ブロックとブロックとの界面（内部境界）で正確に一致することが必要である。さらに，各ブロックの面は，その途中で内部境界と境界とに分けることができない。例えば，B1とB2とを分割せずに1つのブロックにすると，y=0.04m の面が x<0.06m では内部面，x>0.6m で境界面となり，エラーが発生する。
+この例のような face matching 型では，各ブロックで作られたメッシュが，ブロックとブロックとの界面（内部境界）で正確に一致することが必要である。さらに，各ブロックの面は，その途中で内部境界と境界とに分けることができない。例えば，B1とB2とを分割せずに1つのブロックにすると，y = 0.04 m の面が x < 0.06 m では内部面，x > 0.6 m で境界面となり，エラーが発生する。
 
 同じ形状に対して，少ないブロック数でメッシュを生成するためには，face merging 方式とする必要がある。次にその方法を見る。
 
 
-### cavityClipped 例題の改造（mergePatchの使用）
+## cavityClipped 例題の改造（face merging 方式: mergePatchの使用）
 
-blockMeshDict の変更
+先ほどの `blockMeshDict` を，次のような特徴をもつものに変更する。
 
 - 特徴：マルチブロック
 
 - face **merging** 型
 
-cavity/cavityClipped ディレクトリへ移動し，下記のようにblockMeshを変更する。
+`cavity/cavityClipped` ディレクトリへ移動し，下記のように `blockMeshDict` を変更する。
 
-```
+```c++
 scale 0.1;
 
 xMin 0; xMid 0.6; xMax 1;  Nx1 12; Nx2 8;
@@ -567,25 +576,26 @@ mergePatchPairs
 );
 ```
 
-blockMesh を実行する．
+`blockMesh` を実行する．
 
-計算実行時には，controlDict の開始時刻，終了時刻を修正し，pとUファイルの固定壁面のパッチ名を次のように変更する．正規表現を使って，fixedWallsとfixedWalls-midという2つのパッチに同じ条件を与えるためである。
+計算実行時には，`controlDict` の開始時刻，終了時刻を修正し，`p` と `U` ファイルの固定壁面のパッチ名を次のように変更する．正規表現を使って，fixedWallsとfixedWalls-midという2つのパッチに同じ条件を与えるためである。
 
+```c++
+"fixedWalls.*" //this will match both fixedWalls and fixdWalls-mid
 ```
-"fixedWalls.*" //fixedWalls`
-```
 
-paraFoam を実行し，メッシュを確認する．
+`paraFoam` を実行し，メッシュを確認する．
 
 
-### 少し複雑なメッシュの例
 
-#### 円と四角の混在
 
-円に沿った形状
-/opt/openfoam4/tutorials/stressAnalysis/solidDisplacementFoam/plateHole/
+## 少し複雑なメッシュの例
 
-5つのブロックで構成する。edge指定によって，円弧を作成する。
+### 円と四角の混在
+
+円に沿った形状のメッシュを `blockMesh` で作成する例題が，`$FOAM_TUTORIALS/stressAnalysis/solidDisplacementFoam/plateHole/` である。
+
+この例題では，計算領域を5つのブロックから構成する。edge指定によって，円弧を作成する。作成されたメッシュを図に示す。この図には，節点とブロックの番号を追記している。
 
 | <img src="images/plate02.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
 | :--------------------------------------: |
@@ -598,38 +608,63 @@ paraFoam を実行し，メッシュを確認する．
 https://www.openfoam.com/documentation/user-guide/blockMesh.php#x13-410004.3
 
 
-### 比較的新しいblockMeshの機能（projection）
+## 比較的新しいblockMeshの機能（projection）
 
-mesh/blockMesh/sphere 例題では，次のような機能が使われている
+`$FOAM_TUTORIALSmesh/blockMesh/sphere` 例題では，次のような機能が使われている
 
 - 変数形式
 - arc エッジの使用
 - 球の作成
 - faces での球への投影
 
+この例題の `blockMeshDict` の節点，arc で指定する点，および，球の概形を図に示す。
+
 | <img src="images/blockMesh_sphere_verices.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
 | :--------------------------------------: |
 |     図 　vertices from sphere tutorial      |
 
 
+
+`blockMesh` を実行すると，下記のような球形の計算領域にメッシュが生成される。
+
+
 | <img src="images/blockMesh_sphere_zMinusView.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
-| :--------------------------------------: |
-|     図 　mesh from sphere tutorial      |
+| :----------------------------------------------------------: |
+|           図 　mesh from sphere tutorial　(z view)           |
+
+
+
+このメッシュを，z = 0 mm の断面で表示したものを図に示す。外周部に大きく歪んだセルが存在する。
 
 | <img src="images/blockMesh_sphere_zCenterSlice.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
 | :--------------------------------------: |
 |     図 　mesh (zCenter slice) from sphere tutorial      |
 
 
-blockMeshDict において，facesをコメントアウトして実行すると，下記のメッシュが生成される。
+
+プロジェクションの効果を確認するため，`blockMeshDict` において，facesをコメントアウトして実行すると，下記のメッシュが生成される。
 
 | <img src="images/blockMesh_sphere_withoutFacesProjection_zMinusView.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
 | :--------------------------------------: |
 | <img src="images/blockMesh_sphere_withoutFacesProjection_wholeView.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
 |     図 　mesh from sphere tutorial without face-projection     |
 
+
+
 上記のような単純なプロジェクションでは，メッシュの品質が低い。（直交性が悪い。）
+
+
 
 標準例題には，さらに多くのブロックを使用し，品質のよいメッシュを作る例題がある。(sphere7など)
 
-## [目次へ戻る](index_j.md)
+| <img src="images/blockMesh_sphere7_zCenterSlice.png" alt="mesh from plateHole tutorial" title="mesh from plateHole tutorial" width="400px"> |
+| :--------------------------------------: |
+|     図 　mesh (zCenter slice) from sphere7 tutorial      |
+
+
+
+
+
+
+
+# [目次へ戻る](index_j.md)
