@@ -20,7 +20,10 @@ snappyHexMeshの設定は，非常に多くの項目が存在する。大きく�
 - writeFlags: セルに関する情報の出力制御
 - mergeTolerance: 許容値．全体をカバーするボックスに対する相対値．
 
-基本的な例題を実行して，何が行なわれているかを確認する。
+snappyHexMesh に関する説明は下記にある。
+https://www.openfoam.com/documentation/user-guide/snappyHexMesh.php
+
+ここでは，基本的な例題を実行して，何が行なわれているかを確認する。
 
 ### snappyHexMesh/flange例題の作業ディレクトリへのコピー
 
@@ -36,7 +39,7 @@ GUIで操作する場合には，ファイルマネージャーを起動し，`$
 
 ### flange例題の実行と確認
 
-まずは，例題をそのまま
+まずは，例題をそのまま実行してみる。
 
 ファイルマネージャーで，`$FOAM_RUN/flange`  まで移動する。ファイルマネージャー上で右クリックして，「Open Terminal Here」をクリックして端末を起動する。
 
@@ -62,23 +65,26 @@ snappyHexMeshDictに，設定が記載されている。標準のままでは，
 ここから，手作業で一つ一つのコマンドを実行して，何が行なわれたかを確認していく。
 
 まず，形状ファイルのコピーと展開をするため，下記コマンドを実行する。
+
 > cp $FOAM_TUTORIALS/resources/geometry/flange.stl.gz constant/triSurface/
 >
 > uncompress constant/triSurface/flange.stl.gz 
 
 blockMeshを実行する。
+
 > blockMesh
 
 メッシュを見る。
+
 > paraFoam
 
-Wiremesh表示にした上で，ParaViewのFileメニューからOpenを選択し，constant/triSurface/flange.stlを開く。blockMeshで作成したメッシュの内部に，対象物が入っていることを確認する。
+Wireframe表示にした上で，ParaViewのFileメニューからOpenを選択し，`constant/triSurface/flange.stl` を開く。blockMeshで作成したメッシュの内部に，対象物が入っていることを確認する。
 
 | <img src="images/flange_stl_blockMesh.png" alt="blockMesh and flange.stl" title="blockMesh and flange.stl" width="600px"> |
 | :--------------------------------------: |
 |  図 　blockMesh and flange.stl   |
 
-ParaView を終了し，surfaceFeatureExtract を実行する。/constantディレクトリの下にファイルが増えることを確認する。
+ParaView を終了し，surfaceFeatureExtract を実行する。`/constant` ディレクトリの下にファイルが増えることを確認する。
 
 snappyHexMeshDict 105行目付近で，細分化レベルを上げるようにすると，形状の再現性が向上する。修正例は下記となる。
 
@@ -96,9 +102,9 @@ snappyHexMeshDict 105行目付近で，細分化レベルを上げるように�
 ここまでの準備ができたら，snappyHexMeshを実行する。（-overwriteオプションは使わない。）
 > snappyHexMesh
 
-overwriteオプションを使わない場合，castellatedMesh や snap のメッシュ生成過程が保存される。ディレクトリ1には，形状に合わせて，不要なセルを取り除いただけの状態が保存されている。ディレクトリ2には，はみ出したセルを形状に合わせてスナップしたセルが格納される。
+overwriteオプションを使わない場合，castellatedMesh や snap のメッシュ生成過程が保存される。ディレクトリ `1` には，形状に合わせて，不要なセルを取り除いただけの状態が保存されている。ディレクトリ `2` には，はみ出したセルを形状に合わせてスナップしたセルが格納される。
 
-作成されたメッシュをparaFoamで確認する。
+作成されたメッシュをparaFoamで確認する。ParaView が起動したら，緑のApplyボタンをクリックする。そのあと，Surface with Edges 表示に変更して，メッシュが把握できるようにする。時刻を変更し，メッシュの生成過程を確認する。
 > paraFoam
 
 | <img src="images/flange_modified01.png" alt="mesh from modified flange tutorial" title="mesh from modified flange tutorial" width="600px"> |
