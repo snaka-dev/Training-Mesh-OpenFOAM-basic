@@ -1,9 +1,9 @@
 # OpenFOAMによるOpenFOAMのためのメッシュ生成（はじめの一歩）
-## June 15, 2019; OpenCAE勉強会＠富山
-### 中川慎二（富山県立大学）[Shinji NAKAGAWA，Toyama Prefectural University]  
+#### June 15, 2019; OpenCAE勉強会＠富山
+#### 中川慎二（富山県立大学）[Shinji NAKAGAWA，Toyama Prefectural University]  
 
 
-## snappyHexMesh
+# snappyHexMesh
 
 snappyHexMesh では，複雑な形状に沿ったメッシュを作成できる。用意するものは，形状を表すファイル（STL形式など），ベースとなる六面体メッシュ（blockMeshで作成），設定ファイル（snappyHexMeshDict）である。
 
@@ -21,11 +21,14 @@ snappyHexMeshの設定は，非常に多くの項目が存在する。大きく�
 - mergeTolerance: 許容値．全体をカバーするボックスに対する相対値．
 
 snappyHexMesh に関する説明は下記にある。
+
 https://www.openfoam.com/documentation/user-guide/snappyHexMesh.php
+
+snappyHexMesh のソースコードは，`$WM_PROJECT_DIR/applications/utilities/mesh/generation/snappyHexMesh/`　の下にある。ここには、多くの設定項目に対するコメントが記載された `snappyHexMeshDict` も存在する。設定項目について悩んだときは、このファイルを読むとよい。
 
 ここでは，基本的な例題を実行して，何が行なわれているかを確認する。
 
-### snappyHexMesh/flange例題の作業ディレクトリへのコピー
+## snappyHexMesh/flange例題の作業ディレクトリへのコピー
 
 ユーザーの作業ディレクトリ（`$FOAM_RUN`）に，flange例題をコピーする。
 
@@ -37,7 +40,7 @@ GUIで操作する場合には，ファイルマネージャーを起動し，`$
 >
 > cp -r $FOAM_TUTORIALS/mesh/snappyHexMesh/flange .
 
-### flange例題の実行と確認
+## flange例題の実行と確認
 
 まずは，例題をそのまま実行してみる。
 
@@ -57,7 +60,7 @@ paraFoam を実行し，メッシュを見る。
 
 snappyHexMeshDictに，設定が記載されている。標準のままでは，一部の形状が正確に再現されない。それを確認するために，paraviewのFileメニューからOpenを選択し，$FOAM_RUN/flange/constant/extendedFeatureEdgeMesh/flange_externalEdges.obj ファイルを開く。このファイルには，surfaceFeatureExtract ユーティリティで取り出した特徴線が書かれている。
 
-### flange例題のステップ実行と確認
+## flange例題のステップ実行と確認
 
 先ほどの端末で，実行結果を削除するため，Allcleanを実行する。
 > ./Allclean
@@ -111,7 +114,7 @@ overwriteオプションを使わない場合，castellatedMesh や snap のメ�
 | :--------------------------------------: |
 |  図 　mesh from modified flange tutorial   |
 
-#### レイヤー追加操作の追加
+### レイヤー追加操作の追加
 
 先ほど作成したメッシュに，レイヤーを追加する。snappyHexMeshDictのスイッチを操作することで，すでに作成済みのメッシュにレイヤーだけを追加することができる。snappyHexMeshDictの冒頭部分を次のように変更する。
 
@@ -147,11 +150,11 @@ startFrom    latestTime; //startTime;
 なお，addLayerを当初から実行するときと，後で追加実行するときとで，作成されるメッシュが異なることがある。後から追加する方が，キレイなメッシュができることがある。
 
 
-#### パッチ名について
+### パッチ名について
 
 patch名は，geometry欄で指定した名前と，STLファイル内のsolid名から名付けられている．
 
-### その他
+## その他
 
 複数のファイルを組み合わせて，複数領域を有するメッシュを作成可能である．（$FOAM_TUTORIALS/mesh/snappyHexMesh/snappyMultiRegionHeater/例題）
 
