@@ -77,9 +77,7 @@ GUIで操作する場合には，ファイルマネージャーを起動し，`$
 
 > blockMesh
 
-メッシュを見る。初期の設定では，計算領域の大きさが x, y, z 方向に 60mm, 60mm, 40mm であり，これを各方向に 20, 16, 12 分割している。よって，`blockMesh` で作成された1セルの大きさは，3mm, 3.75mm, 3.33mm となる。この大きさが基準(レベル｀0｀)となる。［やってみよう：paraviewで1セル選択，spreadsheet view で節点座標を確認する。］
-
-`snappyHexMesh` では，基準（レベル0）のセルを元にし，必要な部分はこれを3方向に2分割（体積は8分の1）していく。そのため，レベル0の大きさを把握しておくことが重要である。
+`blockMesh` 実行によって，constantディレクトリ内にメッシュ関連情報を保存される。
 
 > paraFoam
 
@@ -88,6 +86,10 @@ Wireframe表示にした上で，ParaViewのFileメニューからOpenを選択�
 | <img src="images/flange_stl_blockMesh.png" alt="blockMesh and flange.stl" title="blockMesh and flange.stl" width="600px"> |
 | :--------------------------------------: |
 |  図 　blockMesh and flange.stl   |
+
+メッシュを見る。初期の設定では，計算領域の大きさが x, y, z 方向に 60mm, 60mm, 40mm であり，これを各方向に 20, 16, 12 分割している。よって，`blockMesh` で作成された1セルの大きさは，3mm, 3.75mm, 3.33mm となる。この大きさが基準(レベル｀0｀)となる。［やってみよう：paraviewで1セル選択，spreadsheet view で節点座標を確認する。］
+
+`snappyHexMesh` では，基準（レベル0）のセルを元にし，必要な部分はこれを3方向に2分割（体積は8分の1）していく。そのため，レベル0の大きさを把握しておくことが重要である。
 
 ParaView を終了し，`surfaceFeatureExtract` を実行する。`/constant` ディレクトリの下にファイルが増えることを確認する。
 
