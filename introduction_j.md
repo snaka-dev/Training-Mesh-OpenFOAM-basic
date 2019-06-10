@@ -1,6 +1,6 @@
 # OpenFOAMによるOpenFOAMのためのメッシュ生成（はじめの一歩）
-## June 15, 2019; OpenCAE勉強会＠富山
-### 中川慎二（富山県立大学）[Shinji NAKAGAWA，Toyama Prefectural University]  
+#### June 15, 2019; OpenCAE勉強会＠富山
+#### 中川慎二（富山県立大学）[Shinji NAKAGAWA，Toyama Prefectural University]  
 
 
 ## はじめに
@@ -18,7 +18,7 @@
 
 ファイル・ソースコード記載事項は次のように表記する。インデント（字下げ）は，必ずしもここに記載通りとは限らない。記入するファイルに合わせて，適切にインデントしてください。
 
-```
+```c++
 solve
 (
     fvm::ddt(T)

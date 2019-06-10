@@ -7,7 +7,7 @@
 
 例題ディレクトリ
 
-`/home/user/OpenFOAM/OpenFOAM-v1812/modules/cfmesh/tutorials/`
+`$WM_PROJECT_DIR/modules/cfmesh/tutorials/`
 
 `snappyHexMesh` と同様なメッシュを生成するためには， `cartesianMesh` コマンドを実行する。その2次元メッシュ用が `cartesian2DMesh` である。
 
@@ -23,9 +23,15 @@
 
 このほかに，細分化，境界層レイヤーなどを指定できる。
 
+`snappyHexMesh` に比較すると，少ない設定項目でメッシュの生成が可能である。便利である反面，詳細にコントロールできない場合や，複数領域を一度に作成できないという欠点がある。
+
+複数のCPUコアを搭載したマシンにおいては，　`cfMesh` は，並列実行を指定しなくても，スレッド並列計算を実施する。
+
 ## cfMesh/cartesianMeshの標準例題 elbow_90degree
 
-`/home/user/OpenFOAM/OpenFOAM-v1812/modules/cfmesh/tutorials/cartesianMesh/elbow_90degree/`
+次の例題を使って，使用方法などを確認する。
+
+`$WM_PROJECT_DIR/modules/cfmesh/tutorials/cartesianMesh/elbow_90degree/`
 
 `Allrun` の内容は次の通りである。
 
@@ -86,6 +92,8 @@ renameBoundary
 }
 ```
 
+標準状態で作成されるメッシュ（z方向中央断面図）は次の通りである。
+
 | <img src="images/cfMesh_elbow_zCenterSlice.png" alt="cfMesh_elbow_zCenterSlice" title="cfMesh_elbow_zCenterSlice" width="400px"> |
 | :--------------------------------------: |
 |     図 　cfMesh_elbow_zCenterSlice      |
@@ -93,10 +101,13 @@ renameBoundary
 
 ## elbow_90degree 例題を簡単な設定で実行してみる
 
->
+`cfMesh` の特徴の1つである単純な設定を実感するため，設定ファイルを単純化してメッシュを生成してみる。
+
+まず，標準の設定ファイルをコピーして，バックアップファイル（ファイル名 meshDict.orig）を作成する。
+
 >cp system/meshDict system/meshDict.orig
 
-`system/meshDict` の内容を，下記の通りとして実行してみる。
+`system/meshDict` の内容を，下記のように変更し，保存する。
 
 ```c++
 surfaceFile "elbow_90degree.stl";
@@ -104,20 +115,25 @@ maxCellSize 5.0;
 boundaryCellSize 3.0;
 ```
 
+`cartesianMesh` を実行し，メッシュを生成する。
+
+> cartesianMesh
+
+生成されたメッシュをparaFoamコマンドで可視化する。なお，ParaViewのPropertiesタブ上部において，VTK Polyhedra オプションを有効すると，正確なメッシュが表示される。下記の図は，メッシュを `Surface With Edges` 方式で表示したものに加えて，半透明にした `elbow_90degree.stl` を表示したものである。
 
 | <img src="images/cfMesh_elbow_simplestSetting.png" alt="cfMesh_elbow_simpleSetting" title="cfMesh_elbow_simpleSetting" width="400px"> |
 | :--------------------------------------: |
 |     図 　cfMesh_elbow_simpleSetting      |
 
 
-boundaryCellSize を少し小さくする。
+メッシュ寸法が大きく，エルボ部の形状再現性が低い。そこで，`boundaryCellSize` を `3` から `2` へと少し小さくし，メッシュを生成する。下記のメッシュが得られる。
 
 | <img src="images/cfMesh_elbow_simpleSetting01.png" alt="cfMesh_elbow_simpleSetting" title="cfMesh_elbow_simpleSetting" width="400px"> |
 | :--------------------------------------: |
 |     図 　cfMesh_elbow_simpleSetting      |
 
 
-局所的細分化の適用例
+エルボ部の形状再現性をさらに向上させるため，局所的細分化を指定する。STLファイル内の `ringArea_S78` という部分だけ，他の境界面よりも小さな `cellSize` を指定する。下記が指定例，および，それによって作成されたメッシュである。エルボ上面に細かなセルが配置され，形状の再現性が向上していることが確認できる。
 
 ```c++
 surfaceFile "elbow_90degree.stl";
@@ -136,6 +152,7 @@ localRefinement
 | :--------------------------------------: |
 |     図 　cfMesh_elbow_cfMesh_elbow_ringRefinement      |
 
+細分化領域は，いろいろな方法で指定できる。詳細については，cfMesh付属の例題を参照のこと。
 
 ## 新たなメッシュ作成に挑戦
 
