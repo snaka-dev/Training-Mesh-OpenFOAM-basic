@@ -13,6 +13,8 @@
 
 このほかに，tetrahedralメッシュを作成するための `tetMesh` コマンド，polyhedralメッシュを作成するための `pMesh` コマンドが存在する。
 
+`cfMesh` のユーザーガイドは，`$WM_PROJECT_DIR/modules/cfmesh/userGuide/` に存在する。
+
 ## cfMesh の設定ファイル meshDict
 
 `cfMesh` の設定は，`system/meshDict` ファイルに記載する。
