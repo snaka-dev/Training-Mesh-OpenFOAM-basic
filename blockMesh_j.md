@@ -3,7 +3,7 @@
 #### 中川慎二（富山県立大学）[Shinji NAKAGAWA，Toyama Prefectural University]  
 
 
-# blockMesh - icoFoam/cavity例題集を使って
+# 1. blockMesh - icoFoam/cavity例題集を使って
 
 blockMesh は，もっとも基本的なメッシュ生成ユーティリティである。設定ファイルを細かく記述すれば，思い通りにコントロールしてメッシュを生成することも可能である。しかし，かなり煩雑な作業となるため，事前に入念な準備・設計が必要である。
 
@@ -13,7 +13,7 @@ blockMesh は，もっとも基本的なメッシュ生成ユーティリティ�
 
 さらに，blockMeshの応用的使用方法，新しい使用方法についても学ぶ。
 
-## icoFoam/cavity例題集の構成
+## 1.1 icoFoam/cavity例題集の構成
 
 `FOAM_TUTORIALS/incompressible/icoFoam/cavity/` に含まれるファイルの情報を確認するため，下記のコマンドを実行する．（treeコマンドの実行）
 
@@ -69,11 +69,11 @@ user@user-VirtualBox:~/OpenFOAM/OpenFOAM-v1812/tutorials/incompressible/icoFoam/
 
 このcavityディレクトリ内には，3つ（cavity cavityGrade cavityClipped）の例題が含まれている。Allrunスクリプトを実行した場合には，cavityケースを複製（clone）した後に改造する2つ（cavityFine, cavityHighRe）の例題も生成される。よって，合計5つの例題が含まれている。
 
-## 作業：cavity例題集の作業ディレクトリへのコピー
+## 1.2 作業：cavity例題集の作業ディレクトリへのコピー
 
 ユーザーの作業ディレクトリ（`$FOAM_RUN`）に，cavity例題集をコピーする。
 
-GUIで操作する場合には，ファイルマネージャーを起動し，`$FOAM_TUTORIALS/incompressible/icoFoam/cavity` ディレクトリをコピーし，`$FOAM_RUN` へペーストする。
+GUIで操作する場合には，ファイルマネージャーを起動し，`$FOAM_TUTORIALS/incompressible/icoFoam/cavity` ディレクトリをコピーし，`$FOAM_RUN` へとペーストする。
 
 コマンドラインで操作する場合には，下記を実行する。2つめのコマンドの最後には，スペースとピリオドがあることに注意してください．
 
@@ -81,7 +81,7 @@ GUIで操作する場合には，ファイルマネージャーを起動し，`$
 >
 > cp -r $FOAM_TUTORIALS/incompressible/icoFoam/cavity/   .
 
-## cavity/cavity 例題のblockMeshDict の確認
+## 1.3cavity/cavity 例題のblockMeshDict の確認
 
 ファイルマネージャーで，`$FOAM_RUN/cavity/cavity` まで移動し，`blockMeshDict` をダブルクリックして開く。
 
@@ -145,7 +145,7 @@ mergePatchPairs
 );
 ```
 
-## blockMesh用設定ファイル blockMeshDict の基本構造
+## 1.4 blockMesh用設定ファイル blockMeshDict の基本構造
 
 `blockMeshDict` ディクショナリの基本構造は次の通りである。
 
@@ -186,7 +186,7 @@ mergePatchPairs
 -  Dictionary に コード（プログラム）を書いて，汎用化
 -  プログラム・スクリプトを作成して生成する
 
-### blockMeshDict: vertices (節点)
+### 1.4.1 blockMeshDict: vertices (節点)
 
 ３次元座標で点の位置を指定する。始めに指定した点が0番となり，順に増える番号が内部で付与される。後の設定では，この節点番号で点を指示する。
 
@@ -194,7 +194,7 @@ mergePatchPairs
 | :--------------------------------------: |
 |        図 　blockMeshDict: vertices        |
 
-### blockMeshDict: blocks(ブロック)
+### 1.4.2 blockMeshDict: blocks(ブロック)
 
 6面体としてブロックを定義する。hexのあとに，6面体の頂点となる節点の番号を列記する。前述の通り，点の指定順によって，ブロック内でのローカルな座標系が決定される。
 
@@ -205,7 +205,7 @@ mergePatchPairs
 | <img src="./images/slide14.png" alt="" title="blockMeshDict: blocks" width="400px"> |
 |         図 　blockMeshDict: blocks         |
 
-### blockMeshDict: edges (線)
+### 1.4.3 blockMeshDict: edges (線)
 
 2つの節点間を結ぶ線の種類を指定できる。指定をしなければ、直線で結ばれる。下記の種類が選択可能である。
 
@@ -221,7 +221,7 @@ mergePatchPairs
 
 
 
-### blockMeshDict: boundary (境界面)
+### 1.4.4 blockMeshDict: boundary (境界面)
 
 境界面には，任意の名前を付ける。ただし，他のファイルの情報（boundary, U, p など）と一致させる必要がある。条件指定時に正規表現が使えるため，同じ条件を付与する面には部分一致する名前を付けるなどの工夫をすると良い。
 
@@ -230,7 +230,7 @@ typeキーワードに続けて，境界条件に応じた型を与える。
 面は，4つの節点で指定する。１つの名前に，複数の面をまとめて指定できる。
 
 
-## 作業：blockMesh の実行
+## 1.5 作業：blockMesh の実行
 
 cavity/cavity ディレクトリから端末を起動する。of1812を有効にして，`blockMesh` を実行する。
 
@@ -244,7 +244,7 @@ cavity/cavity ディレクトリから端末を起動する。of1812を有効に
 
 端末に実行結果が表示される。エラーメッセージが表示されていないか，確認する。
 
-## 作業：paraFoam の実行とメッシュの確認
+## 1.6 作業：paraFoam の実行とメッシュの確認
 
 可視化ソフトを起動するため，`paraFoam` を実行する。
 
@@ -257,7 +257,7 @@ cavity/cavity ディレクトリから端末を起動する。of1812を有効に
 |       図 　mesh from cavity tutorial       |
 
 
-## blockMeshDict 内での変数利用方法の説明
+## 1.7 blockMeshDict 内での変数利用方法の説明
 
 `blockMeshDict` では，数字を直接書く代わりに，変数を使用することができる。
 
@@ -273,7 +273,7 @@ xMax 0;
 $xMax
 ```
 
-### 作業：blockMeshDict の変数を利用した記述
+### 1.7.1 作業：blockMeshDict の変数を利用した記述
 
 【やってみよう！】　この記述方法を使って，もとの `blockMeshDict` を次のように書き換える。
 
@@ -309,7 +309,7 @@ blocks
 
 先ほどと同様に，`blockMesh` を実行し，`paraFoam` でメッシュを確認する。実行時にエラーメッセージが表示されていないかも確認する。
 
-### 作業：z方向のサイズを他と同じ大きさ，分割数に変更してメッシュを生成する。
+### 1.7.2 作業：z方向のサイズを他と同じ大きさ，分割数に変更してメッシュを生成する。
 
 【やってみよう！】　変数を使用すると，メッシュの変更が容易になる。例えば，z方向の大きさを変更して，計算領域を立方体とするには，次のように，zMaxとNzを書き換える。
 
@@ -331,7 +331,7 @@ zMin 0;  zMax 1;    Nz 20;  //dz=0.05
 
 計算領域の大きさ，分割数などを変更して，いろいろなメッシュを生成し，確認してみる。
 
-### Grading（引き寄せ）の設定（各自で挑戦）
+### 1.7.3 Grading（引き寄せ）の設定（各自で挑戦）
 
 ここまでは，等間隔メッシュを作成した。シミュレーションでは，物理量の変化が激しい場所には，細かなメッシュを使用することが望ましい。そのために，生じる物理現象を予想し，物理量の変化の激しい部分に細かなメッシュを作成する。
 
@@ -356,9 +356,9 @@ zMin 0;  zMax 1;    Nz 20;  //dz=0.05
     )
 ```
 
-## cavity/cavityClipped 例題を使って，少しだけ複雑な設定を。
+## 1.8 cavity/cavityClipped 例題を使って，少しだけ複雑な設定を。
 
-### cavity/cavityClipped 例題 ( face matching 方式)
+### 1.8.1 cavity/cavityClipped 例題 ( face matching 方式)
 
 `blockMesh` では，単純な直方体領域でない場合，複数のブロックを組み合わせる必要がある。その例として，先ほどのcavityの一部が計算領域から外れる場合を考える。
 
@@ -466,7 +466,7 @@ mergePatchPairs
 同じ形状に対して，少ないブロック数でメッシュを生成するためには，face merging 方式とする必要がある。次にその方法を見る。
 
 
-### cavityClipped 例題の改造（face merging 方式: mergePatchの使用）
+### 1.8.2 cavityClipped 例題の改造（face merging 方式: mergePatchの使用）
 
 先ほどの `blockMeshDict` を，次のような特徴をもつものに変更する。
 
@@ -505,7 +505,7 @@ vertices
     ($xMid $yMax $zMax)  //14
     ($xMax $yMax $zMax)
 
-    // for merged
+    // for face-merging method. 
     ($xMin $yMid $zMin)  //2=16
     ($xMax $yMid $zMin)  //4=17
     ($xMin $yMid $zMax)  //10=18
@@ -592,9 +592,9 @@ mergePatchPairs
 `paraFoam` を実行し，メッシュを確認する．
 
 
-# 少し複雑なメッシュの例
+# 2. 少し複雑なメッシュの例
 
-## 円と四角の混在
+## 2.1 円と四角の混在
 
 円に沿った形状のメッシュを `blockMesh` で作成する例題が，`$FOAM_TUTORIALS/stressAnalysis/solidDisplacementFoam/plateHole/` である。
 
@@ -611,7 +611,7 @@ mergePatchPairs
 https://www.openfoam.com/documentation/user-guide/blockMesh.php#x13-410004.3
 
 
-# 比較的新しいblockMeshの機能（projection）
+# 3. 比較的新しいblockMeshの機能（projection）
 
 `$FOAM_TUTORIALS/mesh/blockMesh/sphere` 例題では，次のような機能が使われている
 

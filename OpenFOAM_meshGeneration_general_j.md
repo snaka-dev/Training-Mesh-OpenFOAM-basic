@@ -3,11 +3,16 @@
 ### 中川慎二（富山県立大学）[Shinji NAKAGAWA，Toyama Prefectural University]  
 
 
-## OpenFOAMでのメッシュ生成方法
+# OpenFOAMでのメッシュ生成方法
 
-### 概要
+## 概要
 
-OpenFOAM には，メッシュを生成・操作するための多くのユーティリティが付属している。
+OpenFOAM には，メッシュを生成・操作するための多くのユーティリティが付属している。メッシュ生成のための主なユーティリティは次の通りである。
+
+- blockMesh
+- snappyHexMesh
+- foamyHexMesh
+- cfMesh (3rd party)
 
 比較的単純なメッシュは，blockMeshユーティリティを使用して作成できる。
 
@@ -17,14 +22,12 @@ OpenFOAM に付属するものではないが，OpenFOAM のために開発さ�
 
 その他にも，多くのオープンソースソフトウェアや，商用ソフトウェアでメッシュを生成することが可能である。
 
-今回の講習では，主に blockMesh および snappyHexMesh の使用方法について学ぶ。
 
+## メッシュ関連例題の確認
 
-### メッシュ関連例題の確認
+例題ディレクトリ(`$FOAM_TUTORIALS`)に同梱されているメッシュ作成関連例題を確認する。メッシュ作成に特化した例題は，主に `tutorials/mesh` にまとめられている。
 
-例題ディレクトリで，メッシュ作成関連例題を確認する。メッシュ作成に特化した例題は，tutorials/meshにまとめられている。
-
-講習会用仮想マシンの端末を起動し，メッシュ関連例題の一覧を表示した例を次に示す．
+講習会用仮想マシンの端末を起動し，メッシュ関連例題の一覧を表示した例を次に示す。ここでは，linuxシェルのtreeコマンドを利用している。（treeコマンドは標準ではインストールされていない。講習会用マシンには，追加でインストール済みである。）
 
 ``` bash
 OpenFOAM installed: of1812, of6
@@ -78,7 +81,7 @@ user@user-VirtualBox:~/OpenFOAM/OpenFOAM-v1812/tutorials/mesh$ tree -L 2
 
 これ以外にも，様々なソルバ用例題において，多様なメッシュが作成されている。  
 
-OpenFOAM の開発者ではなく，Creative Fields Holding Ltd が開発している cfMesh というライブラリが存在する。OpenFOAM v1812 には，GPL版のcfMeshが同梱されている。そのソースコード等は，$WM_PROJECT_DIR/modules/cfmesh/ に格納されている。
+OpenFOAM の開発者ではなく，Creative Fields Holding Ltd が開発している cfMesh というライブラリが存在する。OpenFOAM v1812 には，GPL版のcfMeshが同梱されている。そのソースコード等は，`$WM_PROJECT_DIR/modules/cfmesh/` に格納されている。
 
 cfMesh にも多くの例題が付属しており，その使い方を知ることができる。例題の一覧を下に示す。
 

@@ -3,7 +3,7 @@
 #### 中川慎二（富山県立大学）[Shinji NAKAGAWA，Toyama Prefectural University]  
 
 
-# cfMesh
+# 1. cfMesh
 
 例題ディレクトリ
 
@@ -15,7 +15,7 @@
 
 `cfMesh` のユーザーガイドは，`$WM_PROJECT_DIR/modules/cfmesh/userGuide/` に存在する。
 
-## cfMesh の設定ファイル meshDict
+## 1.1 cfMesh の設定ファイル meshDict
 
 `cfMesh` の設定は，`system/meshDict` ファイルに記載する。
 
@@ -29,7 +29,7 @@
 
 複数のCPUコアを搭載したマシンにおいては，　`cfMesh` は，並列実行を指定しなくても，スレッド並列計算を実施する。
 
-## cfMesh/cartesianMeshの標準例題 elbow_90degree
+## 1.2 cfMesh/cartesianMeshの標準例題 elbow_90degree
 
 次の例題を使って，使用方法などを確認する。
 
@@ -101,7 +101,7 @@ renameBoundary
 |     図 　cfMesh_elbow_zCenterSlice      |
 
 
-## elbow_90degree 例題を簡単な設定で実行してみる
+## 1.3 elbow_90degree 例題を簡単な設定で実行してみる
 
 `cfMesh` の特徴の1つである単純な設定を実感するため，設定ファイルを単純化してメッシュを生成してみる。
 
@@ -156,7 +156,7 @@ localRefinement
 
 細分化領域は，いろいろな方法で指定できる。詳細については，cfMesh付属の例題を参照のこと。
 
-## 新たなメッシュ作成に挑戦
+## 1.4 新たなメッシュ作成に挑戦
 
 `$WM_PROJECT_DIR/modules/cfmesh/tutorials/cartesianMesh/asmoOctree/` をコピーし，実行ディレクトリ  `$FOAM_RUN` へ`flange_cfMesh`として貼付ける。
 `snappyHexMesh/flange` 例題の`flnge.stl`を，この`$FOAM_RUN/flange_cfMesh`へコピーする。
@@ -188,7 +188,7 @@ boundaryCellSize 0.001;
 |     図 　flange_cfMesh      |
 
 
-## 特徴線を考慮した作業: surfaceFeatureEdges
+## 1.5 特徴線を考慮した作業: surfaceFeatureEdges
 
 `surfaceFeatureEdges` ユーティリティを使用し，stlファイルから特徴線を抽出し，fmsファイルを作成する。下記コマンドを実行する。
 
@@ -210,7 +210,7 @@ boundaryCellSize 0.001;
 |     図 　flange_cfMesh_withFMS      |
 
 
-## cfMeshの制限
+## 1.6 cfMeshの制限
 
 cfMesh では，複数領域のメッシュを直接作成することができない。snappyHexMesh と比較したときの欠点である。
 
