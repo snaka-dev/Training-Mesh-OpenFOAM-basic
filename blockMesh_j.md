@@ -366,7 +366,7 @@ zMin 0;  zMax 1;    Nz 20;  //dz=0.05
 
 - cavityClippedケースの blockMeshDict の特徴
 
-    - 特徴：マルチブロック
+    - 特徴：マルチブロック(3つのブロック)
 
     - face **matching** 型
 
@@ -470,18 +470,26 @@ mergePatchPairs
 
 先ほどの `blockMeshDict` を，次のような特徴をもつものに変更する。
 
-- 特徴：マルチブロック
+- 特徴：マルチブロック(2つのブロック)
 
 - face **merging** 型
 
-`cavity/cavityClipped` ディレクトリへ移動し，下記のように `blockMeshDict` を変更する。
+- ブロック間でメッシュサイズの違いが許容される
+
+
+| <img src="images/cavityClipped01_faceMerging_withBlockID.png" alt="mesh from cavityClipped tutorial" title="mesh from cavityClipped tutorial" width="400px"> |
+| :--------------------------------------: |
+|   図 　mesh from modified cavityClipped tutorial (face-merging). There are only two blocks.    |
+
+
+`cavity/cavityClipped` ディレクトリへ移動し，下記のように `blockMeshDict` を変更する。上図のような節点およびブロック構成となる。
 
 ```c++
 scale 0.1;
 
-xMin 0; xMid 0.6; xMax 1;  Nx1 12; Nx2 8;
-yMin 0; yMid 0.4; yMax 1;  Ny1 12; Ny2 8;
-zMin 0; zMax 0.1;           Nz 1;
+xMin 0; xMid 0.6; xMax 1;  Nx 20; Nx1 12;
+yMin 0; yMid 0.4; yMax 1;         Ny1 12; Ny2 8;
+zMin 0; zMax 0.1;          Nz 1;
 
 vertices
 (
@@ -504,12 +512,6 @@ vertices
     ($xMin $yMax $zMax)
     ($xMid $yMax $zMax)  //14
     ($xMax $yMax $zMax)
-
-    // for face-merging method. 
-    ($xMin $yMid $zMin)  //2=16
-    ($xMax $yMid $zMin)  //4=17
-    ($xMin $yMid $zMax)  //10=18
-    ($xMax $yMid $zMax)  //12=19
 );
 
 blocks
@@ -517,7 +519,9 @@ blocks
     //block 0: bottom block
     hex (0 1 3 2 8 9 11 10) ($Nx1 $Ny2 $Nz) simpleGrading (1 1 1)
     //block 1: top block
-    hex (16 17 7 5 18 19 15 13) ($Nx1 $Ny1 $Nz) simpleGrading (1 1 1)
+    hex (2 4 7 5 10 12 15 13) ($Nx $Ny1 $Nz) simpleGrading (1 1 1)
+    // block 1: different number of mesh can be used.
+    // hex (2 4 7 5 10 12 15 13) ($Nx1 $Ny1 $Nz) simpleGrading (1 1 1)
 );
 
 edges
@@ -539,7 +543,7 @@ boundary
         type wall;
         faces
         (
-            (17 16 18 19)
+            (4 2 10 12)
         );
     }
     lid
@@ -558,8 +562,8 @@ boundary
             (0 8 10 2) //bottom left
             (3 11 9 1)  // bottom right
             (1 9 8 0)  // bottom bottom
-            (16 5 13 18) // top left
-            (17 7 15 19) // top right
+            (2 5 13 10) // top left
+            (4 7 15 12) // top right
         );
     }
     frontAndBack
@@ -569,8 +573,8 @@ boundary
         (
             (0 2 3 1)
             (8 9 11 10)
-            (16 17 7 5)
-            ( 18 19 15 13)
+            (2 4 7 5)
+            (10 12 15 13)
         );
     }
 );
@@ -583,13 +587,15 @@ mergePatchPairs
 
 `blockMesh` を実行する．
 
+`paraFoam` を実行し，メッシュを確認する．
+
+［やってみよう］片方のブロックのメッシュ分割数を変更してみる。
+
 計算実行時には，`controlDict` の開始時刻，終了時刻を修正し，`p` と `U` ファイルの固定壁面のパッチ名を次のように変更する．正規表現を使って，fixedWallsとfixedWalls-midという2つのパッチに同じ条件を与えるためである。
 
 ```c++
 "fixedWalls.*" //this will match both fixedWalls and fixdWalls-mid
 ```
-
-`paraFoam` を実行し，メッシュを確認する．
 
 
 # 2. 少し複雑なメッシュの例
