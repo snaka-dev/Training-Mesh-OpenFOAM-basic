@@ -3,9 +3,15 @@
 #### 中川慎二（富山県立大学）[Shinji NAKAGAWA，Toyama Prefectural University]  
 
 
-# 1. snappyHexMesh
+# 1. snappyHexMesh：flange例題
+
+## 1.1 snappyHexMesh とは
 
 `snappyHexMesh` では，複雑な形状に沿ったメッシュを作成できる。用意するものは，形状を表すファイル（STL形式など），ベースとなる六面体メッシュ（`blockMesh` で作成），設定ファイル（`snappyHexMeshDict` ）である。
+
+`snappyHexMesh` に関する詳細な説明は下記にある。
+
+https://www.openfoam.com/documentation/user-guide/snappyHexMesh.php
 
 `snappyHexMesh` の設定は，非常に多くの項目が存在する。大きく分類した設定項目は下記である。
 
@@ -19,10 +25,6 @@
 - meshQualityControls:  サブディクショナリ．メッシュ品質の判定条件．
 - writeFlags: セルに関する情報の出力制御
 - mergeTolerance: 許容値．全体をカバーするボックスに対する相対値．
-
-`snappyHexMesh` に関する説明は下記にある。
-
-https://www.openfoam.com/documentation/user-guide/snappyHexMesh.php
 
 `snappyHexMesh` のソースコードは，`$WM_PROJECT_DIR/applications/utilities/mesh/generation/snappyHexMesh/` の下にある。ここには、多くの設定項目に対するコメントが記載された `snappyHexMeshDict` も存在する。設定項目について悩んだときは、このファイルを読むとよい。
 
@@ -169,12 +171,24 @@ startFrom    latestTime; //startTime;
 
 patch名は，geometry欄で指定した名前と，STLファイル内のsolid名から名付けられている．
 
-## 1.5 その他
+# 2 その他の例題
 
 複数のファイルを組み合わせて，複数領域を有するメッシュを作成可能である．（`$FOAM_TUTORIALS/mesh/snappyHexMesh/snappyMultiRegionHeater/` 例題）
 
 `snappyHexMeshDict` 内で単純な形状を作成することも可能である．（`$FOAM_TUTORIALS/mesh/snappyHexMesh/iglooWithFridges/` 例題）
 
+# 3 snappyHexMeshに関わるツールなど
 
+## 3.1  SnappyHexMesh GUI add-on for Blender 
+
+http://tkeskita.kapsi.fi/blender/snappyhexmesh_gui/docs/index.html
+
+https://github.com/tkeskita/snappyhexmesh_gui
+
+https://www.cfd-online.com/Forums/openfoam-pre-processing/215790-snappyhexmesh-gui-add-blender.html#post735981
+
+## 3.2 treeFoam
+
+http://opencae.gifu-nct.ac.jp/pukiwiki/index.php?AboutTreeFoam
 
 ## [目次へ戻る](index_j.md)
