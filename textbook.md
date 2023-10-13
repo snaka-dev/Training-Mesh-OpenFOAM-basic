@@ -417,11 +417,15 @@ blocks
 
 | 指定するキーワード | 説明               | 追加で指定する情報 |
 | ---------          | ------------------ | --------- |
-| arc                | 円弧               | 途中の1点     |
+| arc                | 円弧               | 途中の1点　または　**中心座標 origin**     |
 | simpleSpline       | スプライン曲線     | 途中の点のリスト  |
 | polyLine           | 多角線             | 途中の点のリスト  |
 | polySpline         | スプライン曲線の組 | 途中の点のリスト  |
 | line               | 直線               | ー     |
+
+arcについて，昔々は，3点の座標を指定する必要があった。最近は，3点目の座標の代わりに円の中心座標を指示することができる。余計な計算などが不要となり便利である。
+
+[arcのorigin使用例](https://develop.openfoam.com/Development/openfoam/-/blob/master/tutorials/mesh/blockMesh/sphere/system/blockMeshDict)
 
 ##### blockMeshDict: boundary (境界面)
 
@@ -883,6 +887,12 @@ meshとtopologyを表示すると上図となる。ブロックは1つだが，�
 
 [topoSetとsubsetMeshを使ったケース](cases/cavityClippedToposet/)
 
+この方法の注意点としては，削除したい領域のメッシュサイズを把握しておくことである。topoSetDictで指定した座標と，削除される領域の大きさが厳密に一致するかどうかは，セルの大きさや配置に依存する。削除したい大きさや形状に合わせてメッシュを生成しておく必要がある。
+
+#### 自習課題
+
+＜やってみよう！＞　interFoam/damBreakのメッシュを，topoSetとsubsetMeshを使って作ってみよう。
+
 ## 少し複雑なメッシュの例
 
 円に沿った形状
@@ -975,7 +985,7 @@ boundary
 
 [9個のブロック](/cases/nineBlocks/)
 
-[9個のブロック，円](/cases/nineBlocks_cylinder/)
+[9個のブロック，円(projection利用)](/cases/nineBlocks_cylinder/)
 
 [9個のブロック，その内1つを3分割して円](/cases/nineBlocks_cylinder3B/)
 
@@ -987,6 +997,12 @@ User Guide: 4.3 Mesh generation with the blockMesh utility
 
 OpenFOAM v11 User Guide - 5.4 Mesh generation with the blockMesh utility
     https://doc.cfd.direct/openfoam/user-guide-v11/blockmesh
+
+### 関連情報
+
+[メッシュ作成事例／日本アムスコ](https://emsco-jp.com/tech/mesh01/)
+
+[【OpenFOAM(円筒内の流れ)】blockMeshでメッシュ作成(1)](https://takun-physics.net/15282/#google_vignette)
 
 
 # Release note から
