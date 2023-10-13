@@ -1,4 +1,4 @@
-# OpenFOAMによるOpenFOAMのためのメッシュ生成（はじめの一歩）
+# OpenFOAMによるOpenFOAMのためのメッシュ生成（はじめの一歩：blockMesh）
 ## October 14, 2023; OpenCAE勉強会＠富山
 ### 中川慎二（富山県立大学）[Shinji NAKAGAWA，Toyama Prefectural University]  
 
@@ -839,6 +839,65 @@ mergePatchPairs
 全体座標系（ｘ，ｙ，ｚ軸）と局所座標系（そのブロックに対するｘ1，ｘ2，ｘ3軸）との関係について，理解が必要である。ブロックを構成する時に指定する節点の順番によって，これらの関係が定められる。
 
 詳細は [User Guide section 4.3](https://www.openfoam.com/documentation/user-guide/4-mesh-generation-and-conversion/4.3-mesh-generation-with-the-blockmesh-utility#x13-420004.3.1) を参照する。
+
+
+## PDRblockMesh - icoFoam/cavity例題集を使って
+
+OpenFOAM v2112以降のicoFoam/cavity/cavity例題には，PDRblockMeshDictも含まれている。PDRblockMeshについて確認する。
+
+PDFblockMeshでは，構造格子のように見える単純なメッシュ（cavityのメッシュ）をシンプルな記述で作成できる。単純なメッシュであれば，直感的に把握しやすい設定方法である。
+
+x, y, z の各方向に対して，始点座標，終点座標，分割数，拡大率を指示する。下に設定ファイルを示す。ブロックは1つだけである。boundary指定には，面番号を使う。
+
+```
+scale   0.1;
+
+x
+{
+    points  (0 1);
+    nCells  (20);
+    ratios  (1);
+}
+
+y
+{
+    points  (0 1);
+    nCells  (20);
+    ratios  (1);
+}
+
+z
+{
+    points  (0 0.1);
+    nCells  (1);
+    ratios  (1);
+}
+
+
+boundary
+(
+    movingWall
+    {
+        type  wall;
+        faces (3);
+    }
+    fixedWalls
+    {
+        type  wall;
+        faces (0 1 2);
+    }
+    frontAndBack
+    {
+        type  empty;
+        faces (4 5);
+    }
+);
+```
+
+最近のバージョンでは，このPDRblockMeshが改良されている。上記の様にして作成したブロックの周囲に，球形や矩形の領域を追加できる。
+
+[PDRblockMeshとは？](https://zenn.dev/snak/articles/cc9da714de32fa)
+
 
 ## Projectionについて
 
