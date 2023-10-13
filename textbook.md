@@ -823,7 +823,67 @@ mergePatchPairs
 
 計算実行時には，controlDict の開始時刻，終了時刻を修正し，pとUファイルの固定壁面のパッチ名を `"fixedWalls.*" //fixedWalls` と変更する。正規表現を使って，fixedWallsとfixedWalls-midという2つのパッチに同じ条件を与えるため。
 
-### 少し複雑なメッシュの例
+### cavityClippedケースの改良：topoSetとsubsetMeshを使う
+
+cavityClippedケースのように，単純な形状の一部を削除したような場合には，別の方法を使う方が楽な場合がある。
+
+先ほどのケースでは，削除された部分を考慮して，3つのブロックを作成した。ここで考える方法では，ブロックはcavity例題と同じ1つだけでよい。そうして作成したメッシュから，不要な部分を選択（topoSetユーティリティを使用）し，選択部分を削除（subsetMeshユーティリティを使用）する。
+
+topoSetとsubsetMeshユーティリティの使い方を理解していない時には，かえって複雑に感じるかもしれない。topoSetはいろいろな場面で利用できるので，ぜひ使い方を学んでほしい。
+
+topoSetDictの内容は次の通りとする。cellの集まりをcellSetと呼ぶ。任意の名前を付けたセルの集まり（cellSet）を作っていく。全体のセルを選択した後に，不要な部分だけを削除するといった操作を指示している。
+
+```c++: topoSetDict
+actions
+(
+    {
+        name    c0;
+        type    cellSet;
+        action  clear;   // c0 という名のcellSetを空に
+    }
+    {
+        name    c0;
+        type    cellSet;
+        action  invert; // c0 を反転 -> すべてのcellを入れる
+    }
+    {
+        name    c0;
+        type    cellSet;
+        action  subtract;  // 引き算モード
+        source  boxToCell; // 箱型を指定してcellを選択
+        box     (0.6 0 0) (1.0 0.4 0.1); // 対角線上の2点で箱を指定
+        //source  cylinderToCell;
+        //p1      (0.5 0.5 0);
+        //p2      (0.5 0.5 0.25);
+        //radius  0.125;
+    }
+);
+```
+
+このtopoSetDictを使ってメッシュを作成する手順は次の様になる。
+
+```shell: Allrun要約
+blockMesh
+blockMesh -write-vtk
+
+topoSet
+
+subsetMesh -overwrite c0 -patch fixedWalls
+```
+
+topoSetを実行した後には，残したいcellだけがc0という名のcellSetに入っている。そこで，そのc0というメッシュの集まり（mesh subset）を選択させる命令`subsetMesh c0`に既存のメッシュを上書きするオプション`-overwrite`を付けて実行する。これにより，全体のメッシュはc0に上書きされることになり，c0だけが残る。
+
+オプション`-patch fixedWalls`は，mesh subsetを選択したことで新たに生まれた境界面（ここでは，クリップされた部分）に付ける境界名をfixedWallsとするように指示している。
+
+| <img src="images/cavityClippedToposet$_mesh_with_topology.png" alt="mesh and topology (red) from cavityClipped tutorial" title="mesh and topology (red) from cavityClipped tutorial" width="300px"> |
+| :--------------------------------------: |
+| 図 　mesh and topology (red) from cavityClippedToposet case  |
+
+meshとtopologyを表示すると上図となる。ブロックは1つだが，右下部分のメッシュが削除されている。
+
+[topoSetとsubsetMeshを使ったケース](cases/cavityClippedToposet/)
+
+## 少し複雑なメッシュの例
 
 円に沿った形状
 /opt/openfoam4/tutorials/stressAnalysis/solidDisplacementFoam/plateHole/
@@ -839,7 +899,6 @@ mergePatchPairs
 全体座標系（ｘ，ｙ，ｚ軸）と局所座標系（そのブロックに対するｘ1，ｘ2，ｘ3軸）との関係について，理解が必要である。ブロックを構成する時に指定する節点の順番によって，これらの関係が定められる。
 
 詳細は [User Guide section 4.3](https://www.openfoam.com/documentation/user-guide/4-mesh-generation-and-conversion/4.3-mesh-generation-with-the-blockmesh-utility#x13-420004.3.1) を参照する。
-
 
 ## PDRblockMesh - icoFoam/cavity例題集を使って
 
@@ -908,6 +967,17 @@ boundary
 | <img src="images/pipe_mesh_overview_withCurve2_topology.png" alt="block topology and mesh from pipe tutorial" title="block topology and mesh from pipe tutorial" width="450px"> |
 | :--------------------------------------: |
 | 図 　block topology and mesh from pipe tutorial  |
+
+
+## 基本的なブロック構成のケース
+
+[1つのブロック](/cases/oneBlocks/)
+
+[9個のブロック](/cases/nineBlocks/)
+
+[9個のブロック，円](/cases/nineBlocks_cylinder/)
+
+[9個のブロック，その内3つで円](/cases/nineBlocks_cylinder3B/)
 
 ## 参考
 
