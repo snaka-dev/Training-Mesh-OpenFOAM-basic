@@ -977,7 +977,7 @@ boundary
 
 [9個のブロック，円](/cases/nineBlocks_cylinder/)
 
-[9個のブロック，その内3つで円](/cases/nineBlocks_cylinder3B/)
+[9個のブロック，その内1つを3分割して円](/cases/nineBlocks_cylinder3B/)
 
 ## 参考
 
@@ -1174,23 +1174,20 @@ https://www.openfoam.com/news/main-news/openfoam-v3.0
     checkMesh exports bad quality cells more...
 
 
-
-
 ## 備考
-
 
 ### ブロックメッシュの例題候補
 
-候補1：/opt/openfoam4/tutorials/incompressible/pimpleFoam/TJunction
+候補1：tutorials/incompressible/pimpleFoam/TJunction
 ・4ブロック
 ・simpleGrading (1 1 1) のみ
 
-候補2：/opt/openfoam4/tutorials/incompressible/pimpleFoam/pitzDaily
+候補2：tutorials/incompressible/pimpleFoam/pitzDaily
 ・13ブロック
 ・simpleGrading だが，比の組合わせは多数
 ・複雑すぎる？
 
-候補3：/opt/openfoam4/tutorials/incompressible/simpleFoam/pipeCyclic/
+候補3：tutorials/incompressible/simpleFoam/pipeCyclic/
 ・edgesのarcを使用
 ・1ブロック
 ・cyclicAMI　transform rotational;　を使用
