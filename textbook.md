@@ -251,17 +251,17 @@ $FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavityに含まれるファイル�
 
 ユーザーの作業ディレクトリ（＄FOAM_RUN）に，cavity例題集をコピーする。
 
-GUIで操作する場合には，ファイルマネージャーを起動し，`$FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity`ディレクトリをコピーし，`$FOAM_RUN`へペーストする。
+GUIで操作する場合には，ファイルマネージャーを起動し，`$FOAM_TUTORIALS/incompressible/icoFoam/cavity`ディレクトリをコピーし，`$FOAM_RUN`へペーストする。
 
 コマンドラインで操作する場合には，下記を実行する。
 
 > cd $FOAM_RUN
 >
-> cp -r $FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity .
+> cp -r $FOAM_TUTORIALS/incompressible/icoFoam/cavity .
 
 ### cavity/cavity 例題のblockMeshDict の確認
 
-ファイルマネージャーで，`$FOAM_RUN/cavity/system`まで移動し，blockMeshDictをダブルクリックして開く。
+ファイルマネージャーで，`$FOAM_RUN/cavity/cavity/system`まで移動し，blockMeshDictをダブルクリックして開く。
 
 ```
 scale 0.1;
@@ -397,6 +397,7 @@ vertices
 |         図 　blockMeshDict: blocks         |
 
 ブロックにも定義した順番に自動的に番号が付与される。それに加えて名前を付けることもできる。
+
 ```c++
 blocks
 (
@@ -438,11 +439,12 @@ typeキーワードに続けて，境界条件に応じた型を与える。
 
 #### blockMesh の実行
 
-cavity ディレクトリから端末を起動し，blockMeshを実行する。
+cavity/cavity ディレクトリから端末を起動し，blockMeshを実行する。
 
-ファイルマネージャーで，cavityまで移動する。ファイルマネージャー上で右クリックして，「Open Terminal Here」をクリックして端末を起動する。
+ファイルマネージャーで，cavity/cavityまで移動する。ファイルマネージャー上で右クリックして，「Open Terminal Here」をクリックして端末を起動する。
 
 メッシュ生成ユーティリティblockMeshを実行する。
+
 > blockMesh
 
 端末に実行結果が表示される。エラーメッセージが表示されていないか，確認する。
@@ -450,6 +452,7 @@ cavity ディレクトリから端末を起動し，blockMeshを実行する。
 #### paraFoam の実行とメッシュの確認
 
 可視化ソフトを起動するため，paraFoamを実行する。
+
 > paraFoam
 
 ParaViewが起動したら，緑色になっているApplyボタンをクリックする。「Surface with Edges」形式で表示することで，作成されたメッシュが確認できる。
@@ -462,7 +465,7 @@ ParaViewが起動したら，緑色になっているApplyボタンをクリッ�
 
 #### blockMeshDict 内での変数利用方法の説明
 
-blockMeshDict を操作するさい，数字を直接書く代わりに，変数を使用することができる。
+blockMeshDict を操作するとき，数字を直接書く代わりに，変数を使用することができる。
 
 変数に値をセットする方法：設定ファイル内では，次のように，変数名と数字を並べて書き，間には空白を入れる。数字の後ろにはセミコロンを入れる。
 
@@ -888,6 +891,8 @@ meshとtopologyを表示すると上図となる。ブロックは1つだが，�
 [topoSetとsubsetMeshを使ったケース](cases/cavityClippedToposet/)
 
 この方法の注意点としては，削除したい領域のメッシュサイズを把握しておくことである。topoSetDictで指定した座標と，削除される領域の大きさが厳密に一致するかどうかは，セルの大きさや配置に依存する。削除したい大きさや形状に合わせてメッシュを生成しておく必要がある。
+
+[topoSetのsource](https://www.openfoam.com/documentation/guides/latest/doc/guide-meshing-topoSet.html)
 
 #### 自習課題
 
