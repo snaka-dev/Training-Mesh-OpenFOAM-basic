@@ -447,7 +447,7 @@ cavity/cavity ディレクトリから端末を起動し，blockMeshを実行す
 
 > blockMesh
 
-端末に実行結果が表示される。エラーメッセージが表示されていないか，確認する。
+端末に実行結果が表示される。エラーメッセージが表示されていないか確認する。
 
 #### paraFoam の実行とメッシュの確認
 
@@ -556,6 +556,7 @@ Nx 20; Ny 20; Nz 20;
 
 ```shell
 xMin 0; yMin $xMin; zMin $xMin;
+xMax;
 yMax $xMax;
 zMax #eval { $xMax / 10 };
 ```
@@ -608,7 +609,7 @@ cavity例題の計算領域の一部を除外したような形状について�
 |   図 　mesh from cavityClipped tutorial    |
 
 ```
-convertToMeters 0.1;
+scale 0.1;
 
 xMin 0; xMid 0.6; xMax 1;
 yMin 0; yMid 0.4; yMax 1;
@@ -636,7 +637,6 @@ vertices
     ($xMin $yMax $zMax)
     ($xMid $yMax $zMax)
     ($xMax $yMax $zMax)
-
 );
 
 blocks
@@ -721,7 +721,7 @@ blockMeshDictでscaleを1以外にしていると，両者の大きさが異な�
 1. paraFoam の実行とメッシュの確認
 
 ```c++: blockMeshDict例
-convertToMeters 0.1;
+scale 0.1;
 
 xMin 0; xMid 0.6; xMax 1;
 yMin 0; yMid 0.4; yMax 1;
@@ -890,7 +890,7 @@ meshとtopologyを表示すると上図となる。ブロックは1つだが，�
 
 [topoSetとsubsetMeshを使ったケース](cases/cavityClippedToposet/)
 
-この方法の注意点としては，削除したい領域のメッシュサイズを把握しておくことである。topoSetDictで指定した座標と，削除される領域の大きさが厳密に一致するかどうかは，セルの大きさや配置に依存する。削除したい大きさや形状に合わせてメッシュを生成しておく必要がある。
+この方法では，削除したい領域のメッシュサイズを把握しておかなければならない。topoSetDictで指定した座標と，削除される領域の大きさが厳密に一致するかどうかは，セルの大きさや配置に依存する。削除したい大きさや形状に合わせてメッシュを生成しておく必要がある。
 
 [topoSetのsource](https://www.openfoam.com/documentation/guides/latest/doc/guide-meshing-topoSet.html)
 
@@ -914,8 +914,7 @@ clipRegionSizeX #eval { ($xMax-$xMin)*$ratio };
 
 ## 少し複雑なメッシュの例
 
-円に沿った形状
-/opt/openfoam4/tutorials/stressAnalysis/solidDisplacementFoam/plateHole/
+円に沿った形状のメッシュを生成する例題がたくさん存在する。例えば，`stressAnalysis/solidDisplacementFoam/plateHole/`がある。そのメッシュを確認する。
 
 5つのブロックで構成する。edge指定によって，円弧を作成する。
 
@@ -923,9 +922,9 @@ clipRegionSizeX #eval { ($xMax-$xMin)*$ratio };
 | :--------------------------------------: |
 |     図 　mesh from plateHole tutorial      |
 
-斜め（ｘ，ｙ，ｚ軸と直交しない）メッシュの場合，指定する分割数はどのように解釈されるだろうか？
+斜め（x，y，z軸と直交しない）メッシュの場合，指定する分割数はどのように解釈されるだろうか？
 
-全体座標系（ｘ，ｙ，ｚ軸）と局所座標系（そのブロックに対するｘ1，ｘ2，ｘ3軸）との関係について，理解が必要である。ブロックを構成する時に指定する節点の順番によって，これらの関係が定められる。
+全体座標系（x，y，z軸）と局所座標系（そのブロックに対するx1，x2，X3軸）との関係について，理解が必要である。ブロックを構成する時に指定する節点の順番によって，これらの関係が定められる。
 
 詳細は [User Guide section 4.3](https://www.openfoam.com/documentation/user-guide/4-mesh-generation-and-conversion/4.3-mesh-generation-with-the-blockmesh-utility#x13-420004.3.1) を参照する。
 
@@ -961,7 +960,6 @@ z
     ratios  (1);
 }
 
-
 boundary
 (
     movingWall
@@ -988,6 +986,8 @@ boundary
 
 
 ## Projectionについて
+
+形状や面に節点・エッジ・面などを投影することで，形状にフィットしたメッシュを作成することができる。
 
 [ユーザーガイドの説明 https://doc.cfd.direct/openfoam/user-guide-v11/blockmesh#x28-1580005.4.8](https://doc.cfd.direct/openfoam/user-guide-v11/blockmesh#x28-1580005.4.8)
 
@@ -1039,14 +1039,13 @@ https://www.youtube.com/watch?v=Zw5y-daTvfY
 https://figshare.com/articles/presentation/18th_OpenFOAM_Workshop_-_Easier_meshing_with_snappyHexMesh_and_DICEHUB/23960838
 
 
-# Release note から
+# Release note からメッシングに関する部分を抜き書き
 
 ## v2306
 https://www.openfoam.com/news/main-news/openfoam-v2306/pre-processing
 
     snappyHexMesh: avoiding excess balancing more...
     Improved checkMesh more...
-
 
 ## v2212
 
@@ -1058,7 +1057,6 @@ https://www.openfoam.com/news/main-news/openfoam-v2212/pre-processing
     Improved setFields more...
     New clipPlane topo-set more...
 
-
 ## v2206
 https://www.openfoam.com/news/main-news/openfoam-v2206/pre-processing
 
@@ -1069,7 +1067,6 @@ https://www.openfoam.com/news/main-news/openfoam-v2206/pre-processing
     Improved createPatch utility more...
     Improved triSurfaceMesh: detect inconsistent orientation more...
     New setTurbulenceFields pre-processing utility more...
-
 
 ## v2112
 https://www.openfoam.com/news/main-news/openfoam-v2112/pre-processing
@@ -1092,7 +1089,6 @@ https://www.openfoam.com/news/main-news/openfoam-v2106/pre-processing
     Improved utility region handling more...
     Improved patch expressions more...
 
-
 ## v2012
 
 ### blockMesh: improvements
@@ -1102,7 +1098,6 @@ https://www.openfoam.com/news/main-news/openfoam-v20-12/pre-processing#pre-proce
 ### Improved PDRblockMesh
 
 https://www.openfoam.com/news/main-news/openfoam-v20-12/pre-processing#pre-processing-pdrblockmesh
-
 
     snappyHexMesh: new hybrid layer input more...
     snappyHexMesh: improved gap refinement controls more...
@@ -1118,7 +1113,6 @@ https://www.openfoam.com/news/main-news/openfoam-v20-12/pre-processing#pre-proce
 ### OpenFOAM® v2006: New and improved pre-processing
 
 https://www.openfoam.com/news/main-news/openfoam-v20-06/pre-processing#pre-processing-blockmesh
-
 
     Improved blockMesh utility more...
     New baffle creation in blockMesh more...
@@ -1225,6 +1219,10 @@ https://www.openfoam.com/news/main-news/openfoam-v3.0
 
 
 ## 備考
+
+[Mesh Gallery created with blockMesh (OpenFOAM)](https://zenn.dev/snak/articles/e6ffa9c7e2fbf2)
+
+[blockMeshを使った標準例題のメモ](https://zenn.dev/snak/articles/7c96f101afbe70)
 
 ### ブロックメッシュの例題候補
 
