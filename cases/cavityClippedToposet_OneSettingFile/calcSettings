@@ -1,0 +1,45 @@
+
+// ======
+//
+//    for blockMesh
+//
+
+// blockMesh settings
+// Caution: if scale is not unity,
+//    you may add " * $scale" in other parts.
+// This scale works only in blockMeshDict.
+scale   1; 
+
+
+// variable definition
+nx 20; ny $nx; nz 1;
+xMax 1; yMax $xMax; zMax 0.1;
+xMin 0; yMin $xMin; zMin $xMin;
+
+
+// ======
+//
+//    for topoSet
+//
+//       box     (0.6 0 0) (1.0 0.4 0.1);
+
+// start position for box
+bsX 0.6;
+bsY 0;
+bsZ 0;
+
+// end position for box
+//beX 1.0;
+//beY 0.4;
+//beZ 0.1;
+
+// size of clipped part
+bDX 0.4;
+bDY 0.4;
+bDZ 0.1;
+
+// end position for box
+beX #eval { $bsX + $bDX }; // 1.0;
+beY #eval { $bsY + $bDY }; // 0.4;
+beZ #eval { $bsZ + $bDZ }; // 0.1;
+

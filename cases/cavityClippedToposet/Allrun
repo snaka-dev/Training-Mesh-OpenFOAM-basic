@@ -1,0 +1,19 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+
+runApplication -s blockMesh-writeVTK blockMesh -write-vtk
+
+runApplication topoSet
+
+runApplication subsetMesh -overwrite c0 -patch fixedWalls
+
+# cp -r 0 0.5
+# runMapFields cavity $caseName
+# runApplication $(getApplication)
+
+#------------------------------------------------------------------------------
